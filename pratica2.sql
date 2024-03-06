@@ -27,7 +27,7 @@ values ("Nacao Zumbi", 6, "Betelgeuse"),
 
 insert into dominancia (nacao, planeta, data_inicio, data_fim)
 values ("Nacao Zumbi", "Terra", to_date("02/02/2002","dd/mm/yyyy"), null), 
-       ("Nacao do Foto", "Plutao", to_date("04/05/1025"), null);
+       ("Nacao do Fogo", "Plutao", to_date("04/05/1025"), null);
 
 insert to sistema (estrela, nome)
 values ("BABY0001", "Planet Hemp"),
@@ -40,5 +40,48 @@ values ("BABY0001", "NEYM1010", 1, 100000, 56.458529),
 insert to orbita_planeta (planeta, estrela, distancia_maxima, distancia_maxima)
 values ("Terra", "SKOL0420", 500, 501),
        ("Terra", "NEYM1010", 12, 136);
+
+insert to especie (nome_cinetifico, planeta_o, eh_inteligente) 
+values ("sapiens", "Terra", "s"), ("texano", "Plutao", "n");
+
+insert to comunidade (especie, nome, qtd_habitantes)
+values ("sapiens", "humanoides", 200), ("texano", "texies", null);
+
+insert to habitacao (planeta,com_especie,com_nome,dta_inicio, dta_fim)
+values ("Terra", "sapiens", "humanoides", to_date("12/12/2012", "dd/mm/yyyy"), to_date("10/10/2010", "dd/mm/yyyy")),
+       ("Plutao", "texano", "texies", to_data("02/02/2002", "dd/mm/yyyy"), to_date("03/03/2003", "dd/mm/yyyy"));
+
+insert to lider (CPI, nome, cargo, nacao, especie) 
+values("65287623", "Denzel", "Comandante", "Nacao Zumbi", "sapiens"), ("90675418", "Mickey", "Cientista", "Nacao do fogo", "texies");
+
+insert to faccao (nome_faccao, lider_faccao, ideologia, qtd_nacoes)
+values("Comando red", "Mickey", "progressista", 2), ("Faccao carinhosa", "Denzel", "tradicionalista", 5);
+
+insert to nacao_faccao (nacao, faccao)
+values ("Nacao do fogo", "Faccao carinhosa"), ("Nacao Zumbi", "Comamdo red");
+
+insert to participa (faccao, comunidade_especie, comunidade_nome)
+values ("Comando red", "sapiens", "humanoides"), ("Faccao carinhosa", "texano", "texies");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
