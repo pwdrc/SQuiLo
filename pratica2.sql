@@ -5,9 +5,9 @@
 -- VALUES (value1, value2, value3, ...);
 
 insert into federacao (nome_fd, data_fundacao)
-values ("FIFA", to_date('10/05/1996', 'dd/mm/yyyy'), default);
+values ("FIFA", to_date('10/05/1996', 'dd/mm/yyyy'));
 insert into federacao (nome_fd, data_fundacao)
-values ("Betelgeuse", to_date('10/01/1000', 'dd/mm/yyyy'), default);
+values ("Betelgeuse", to_date('10/01/1000', 'dd/mm/yyyy'));
 
 insert into estrela (id_catalogo, nome, classificao_estrela, massa, coord_x, coord_y, coord_z)
 values ("BABY0001", "Babylon By Gus", "Praticamente inofensiva", 500, 70000, 4, -45);
