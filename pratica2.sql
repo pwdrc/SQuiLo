@@ -21,48 +21,75 @@ values ("Terra", 0.56, 33, "terra+agua", "delicinha");
 insert into planeta (designacao_astronomica, massa, raio, composicao, classificao_planeta)
 values ("Plutao", 0.05, 8, "poeira espacial", "anao");
 
+
 insert into nacao (nome_nacao, quantidade_planetas, federacao)
-values ("Nacao Zumbi", 6, "Betelgeuse"), 
-       ("Nacao do Fogo", 1, "Betelgeuse");
+values ('Nacao Zumbi', 6, 'Betelgeuse');
+
+insert into nacao (nome_nacao, quantidade_planetas, federacao)
+values ('Nacao do Fogo', 1, 'Betelgeuse');
 
 insert into dominancia (nacao, planeta, data_inicio, data_fim)
-values ("Nacao Zumbi", "Terra", to_date("02/02/2002","dd/mm/yyyy"), null), 
-       ("Nacao do Fogo", "Plutao", to_date("04/05/1025"), null);
+values ('Nacao Zumbi', 'Terra', to_date('02/02/2002','dd/mm/yyyy'), null);
+
+insert into dominancia (nacao, planeta, data_inicio, data_fim)
+values ('Nacao do Fogo', 'Plutao', to_date('04/05/1025','dd/mm/yyyy'), null);
 
 insert into sistema (estrela, nome)
-values ("BABY0001", "Planet Hemp"),
-       ("NEYM1010", "Los Parsas");
+values ('BABY0001', 'Planet Hemp');
 
-insert into orbita_estrela (orbitante, orbitada, distancia_minima, distancia_maxima, periodo)
-values ("BABY0001", "NEYM1010", 1, 100000, 56.458529),
-       ("SKOL1234", "BABY0001", 254, 698, 333.333);
+insert into sistema (estrela, nome)
+values ('NEYM1010', 'Los Parsas');
 
-insert into orbita_planeta (planeta, estrela, distancia_maxima, distancia_maxima)
-values ("Terra", "SKOL0420", 500, 501),
-       ("Terra", "NEYM1010", 12, 136);
+insert into orbita_estrela (orbitante, orbitada, distancia_min, distancia_max, periodo)
+values ('BABY0001', 'NEYM1010', 1, 100000, 56.458529);
 
-insert into especie (nome_cinetifico, planeta_o, eh_inteligente) 
-values ("sapiens", "Terra", "s"), ("texano", "Plutao", "n");
+insert into orbita_estrela (orbitante, orbitada, distancia_min, distancia_max, periodo)
+values ('SKOL0420', 'BABY0001', 254, 698, 333.333);
+insert into orbita_planeta (planeta, estrela, distancia_min, distancia_max)
+values ('Terra', 'SKOL0420', 500, 501);
+
+insert into orbita_planeta (planeta, estrela, distancia_min, distancia_max)
+values('Terra', 'NEYM1010', 12, 136);
+
+insert into especie (nome_cientifico, planeta_o, eh_inteligente) 
+values ('sapiens', 'Terra', 's');
+
+insert into especie (nome_cientifico, planeta_o, eh_inteligente) 
+values ('texano', 'Plutao', 'n');
 
 insert into comunidade (especie, nome, qtd_habitantes)
-values ("sapiens", "humanoides", 200), ("texano", "texies", null);
+values ('sapiens', 'humanoides', 200);
+
+insert into comunidade (especie, nome, qtd_habitantes)
+values ('texano', 'texies', null);
+insert into habitacao (planeta,com_especie,com_nome,dta_inicio, dta_fim)
+values ('Terra', 'sapiens', 'humanoides', to_date('12/12/2012', 'dd/mm/yyyy'), to_date('10/10/2010', 'dd/mm/yyyy'));
 
 insert into habitacao (planeta,com_especie,com_nome,dta_inicio, dta_fim)
-values ("Terra", "sapiens", "humanoides", to_date("12/12/2012", "dd/mm/yyyy"), to_date("10/10/2010", "dd/mm/yyyy")),
-       ("Plutao", "texano", "texies", to_data("02/02/2002", "dd/mm/yyyy"), to_date("03/03/2003", "dd/mm/yyyy"));
+values ('Plutao', 'texano', 'texies', to_date('02/02/2002', 'dd/mm/yyyy'), to_date('03/03/2003', 'dd/mm/yyyy'));
 
 insert into lider (CPI, nome, cargo, nacao, especie) 
-values("65287623", "Denzel", "Comandante", "Nacao Zumbi", "sapiens"), ("90675418", "Mickey", "Cientista", "Nacao do fogo", "texies");
+values('65287623', 'Denzel', 'Comandante', 'Nacao Zumbi', 'sapiens');
+
+insert into lider (CPI, nome, cargo, nacao, especie) 
+values ('90675418', 'Mickey', 'Cientista', 'Nacao do Fogo', 'texano');
+insert into faccao (nome_faccao, lider_faccao, ideologia, qtd_nacoes)
+values('Comando red', '90675418', 'progressista', 2);
 
 insert into faccao (nome_faccao, lider_faccao, ideologia, qtd_nacoes)
-values("Comando red", "Mickey", "progressista", 2), ("Faccao carinhosa", "Denzel", "tradicionalista", 5);
+values ('Faccao carinhosa', '65287623', 'tradicionalista', 5);
 
 insert into nacao_faccao (nacao, faccao)
-values ("Nacao do fogo", "Faccao carinhosa"), ("Nacao Zumbi", "Comamdo red");
+values ('Nacao do Fogo', 'Faccao carinhosa');
+
+insert into nacao_faccao (nacao, faccao)
+values ('Nacao Zumbi', 'Comando red');
 
 insert into participa (faccao, comunidade_especie, comunidade_nome)
-values ("Comando red", "sapiens", "humanoides"), ("Faccao carinhosa", "texano", "texies");
+values ('Comando red', 'sapiens', 'humanoides');
 
+insert into participa (faccao, comunidade_especie, comunidade_nome)
+values ('Faccao carinhosa', 'texano', 'texies');
 
 
 
