@@ -239,3 +239,5 @@ values ('Comando red', 'sapiens', 'humanoides');
 
 insert into participa (faccao, comunidade_especie, comunidade_nome)
 values ('Faccao carinhosa', 'texano', 'texies');
+
+commit;
