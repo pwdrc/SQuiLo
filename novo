@@ -281,15 +281,18 @@ alter table especie add constraint check2_eh_inteligente check (upper(eh_intelig
 alter table nacao modify (federacao default 'desconhecida'); 
 alter table nacao modify (nome_nacao null);
 
-ALTER TABLE faccao DROP CONSTRAINT fk_lider_faccao;
+alter table faccao drop constraint fk_lider_faccao;
 alter table lider drop column CPI;
 commit;
 
---    Ao remover o(s) atributo(s) que define(m) a chave primária, a tabela planeta não terá mais uma chave primária. Isso significa que você pode ter linhas duplicadas e a integridade dos dados pode ser comprometida.
-    Se houver índices definidos na chave primária, esses índices serão removidos.
-    Se houver constraints de chave estrangeira que fazem referência à chave primária removida, elas serão inválidas e precisarão ser ajustadas ou removidas.
+-- Ao remover os atributos que definem a chave primária, a tabela faccao não terá mais uma chave primária. Isso significa pode ter linhas duplicadas e a integridade dos dados pode ser comprometida.
+-- Se houver índices definidos na chave primária, esses índices serão removidos.
+-- Se houver constraints de chave estrangeira que fazem referência à chave primária removida, elas serão inválidas e precisarão ser ajustadas ou removidas.
 
-Tabela que a Referencia:
+-- Tabela que a Referencia:
 
-    Se houver constraints de chave estrangeira na tabela que referencia planeta, elas se tornarão inválidas, pois estão referenciando uma chave primária que não existe mais.
-    Isso pode levar a problemas de integridade referencial e operações de inserção ou atualização nessas tabelas podem falhar.
+-- Se houver constraints de chave estrangeira na tabela que referencia faccao, elas se tornarão inválidas, pois estão referenciando uma chave primária que não existe mais.
+-- Isso pode levar a problemas de integridade referencial e operações de inserção ou atualização nessas tabelas podem falhar.
+
+drop table planeta;
+-- a tabela referenciadora contiver uma constraint de chave estrangeira com a opção ON DELETE CASCADE, a remoção da tabela referenciada também removerá automaticamente os dados relacionados na tabela referenciadora.
