@@ -84,6 +84,7 @@ create table especie(
     constraint chek_eh_inteligente check (upper(eh_inteligente) in ('S', 'N'))
 );
 
+
 create table comunidade(
     especie varchar2(128) not null,
     nome varchar2(128) not null,
@@ -294,5 +295,6 @@ commit;
 -- Se houver constraints de chave estrangeira na tabela que referencia faccao, elas se tornarão inválidas, pois estão referenciando uma chave primária que não existe mais.
 -- Isso pode levar a problemas de integridade referencial e operações de inserção ou atualização nessas tabelas podem falhar.
 
-drop table planeta;
--- a tabela referenciadora contiver uma constraint de chave estrangeira com a opção ON DELETE CASCADE, a remoção da tabela referenciada também removerá automaticamente os dados relacionados na tabela referenciadora.
+drop table planeta cascade constraints;
+-- Se a tabela referenciadora contiver uma constraint de chave estrangeira com a opção ON DELETE CASCADE, a remoção da tabela referenciada também removerá automaticamente os dados 
+-- relacionados na tabela referenciadora, garantindo a integridade referencial dos dados.
