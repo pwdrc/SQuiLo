@@ -269,19 +269,62 @@ select estrela2.nome as orbitada,	estrela2.classificacao_estrela as orbitada_cla
 	join estrela estrela2 on orbita_estrela.orbitada = estrela2.id_catalogo;
   
   
-SELECT 
-    P.planeta,
-    COUNT(C.especie) AS quantidade_comunidades_inteligentes
-FROM 
-    habitacao P 
-LEFT JOIN 
-    especie E ON P.planeta = E.planeta_o AND E.eh_inteligente = 's'
-LEFT JOIN 
-    comunidade C ON C.especie = E.nome_cientifico
-GROUP BY 
-    P.planeta;
-  
-
+---------------------------------------------------- letra D
+	--------------------------testes da letra D
+	insert into habitacao (planeta,com_especie,com_nome,dta_inicio, dta_fim)
+	values ('Terra', 'texano', 'texies', to_date('12/12/2012', 'dd/mm/yyyy'), to_date('12/12/2025', 'dd/mm/yyyy'));
+	insert into habitacao (planeta,com_especie,com_nome,dta_inicio, dta_fim)
+	values ('Plutao', 'sapiens', 'humanoides', to_date('12/12/2012', 'dd/mm/yyyy'), to_date('12/12/2027', 'dd/mm/yyyy'));
+	
+	-- Planetas
+	INSERT INTO PLANETA (DESIGNACAO_ASTRONOMICA, MASSA, RAIO, COMPOSICAO, CLASSIFICACAO_planeta) 
+	    VALUES ('Terraço', 5.972 * POWER(10, 24), 6371, 'Nitrogenio e Oxigenio', 'Terrestre');
+	INSERT INTO PLANETA (DESIGNACAO_ASTRONOMICA, MASSA, RAIO, COMPOSICAO, CLASSIFICACAO_planeta) 
+	    VALUES ('Marte', 6.417 * POWER(10, 23), 3389.5, 'Dióxido de Carbono', 'Terrestre');
+	
+	-- Especies
+	INSERT INTO ESPECIE (NOME_CIENTIFICO, PLANETA_O, EH_INTELIGENTE) 
+	    VALUES ('Humanos', 'Terra', 'S');
+	INSERT INTO ESPECIE (NOME_CIENTIFICO, PLANETA_o, EH_INTELIGENTE) 
+	    VALUES ('FEDERUPAS', 'Terraço', 'N');
+	INSERT INTO ESPECIE (NOME_CIENTIFICO, PLANETA_O, EH_INTELIGENTE) 
+	    VALUES ('USPIANOS', 'Terraço', 'S');
+	INSERT INTO ESPECIE (NOME_CIENTIFICO, PLANETA_O, EH_INTELIGENTE) 
+	    VALUES ('Computeiros', 'Terra', 'S');
+	INSERT INTO ESPECIE (NOME_CIENTIFICO, PLANETA_O, EH_INTELIGENTE) 
+	    VALUES ('Marcianos', 'Marte', 'N');
+	
+	-- Comunidades
+	INSERT INTO COMUNIDADE (ESPECIE, NOME, QTD_HABITANTES) 
+	    VALUES ('Humanos', 'Metropolis', 10000000);
+	INSERT INTO COMUNIDADE (ESPECIE, NOME, QTD_HABITANTES) 
+	    VALUES ('FEDERUPAS', 'UFSCAR', 200);
+	INSERT INTO COMUNIDADE (ESPECIE, NOME, QTD_HABITANTES) 
+	    VALUES ('USPIANOS', 'USP', 1500);
+	INSERT INTO COMUNIDADE (ESPECIE, NOME, QTD_HABITANTES) 
+	    VALUES ('Computeiros', 'BSI', 1500);
+	INSERT INTO COMUNIDADE (ESPECIE, NOME, QTD_HABITANTES) 
+	    VALUES ('Marcianos', 'Red Valley', 5000000);
+	
+	
+	-- Habitacoes
+	INSERT INTO HABITACAO (PLANETA, COM_ESPECIE, COM_NOME, DTa_INICIO, DTa_FIM) 
+	    VALUES ('Terra', 'Humanos', 'Metropolis', TO_DATE('2200-01-01', 'YYYY-MM-DD'), TO_DATE('2300-01-01', 'YYYY-MM-DD'));
+	INSERT INTO HABITACAO (PLANETA, COM_ESPECIE, COM_NOME, DTa_INICIO, DTa_FIM) 
+	    VALUES ('Terra', 'FEDERUPAS', 'UFSCAR', TO_DATE('2200-01-01', 'YYYY-MM-DD'), TO_DATE('2300-01-01', 'YYYY-MM-DD'));
+	INSERT INTO HABITACAO (PLANETA, COM_ESPECIE, COM_NOME, DTa_INICIO, DTa_FIM) 
+	    VALUES ('Terra', 'USPIANOS', 'USP', TO_DATE('2200-01-01', 'YYYY-MM-DD'), TO_DATE('2300-12-31', 'YYYY-MM-DD'));
+	INSERT INTO HABITACAO (PLANETA, COM_ESPECIE, COM_NOME, DTa_INICIO, DTa_FIM) 
+	    VALUES ('Terra', 'Computeiros', 'BSI', TO_DATE('2200-01-01', 'YYYY-MM-DD'), TO_DATE('2300-01-01', 'YYYY-MM-DD'));
+	INSERT INTO HABITACAO (PLANETA, COM_ESPECIE, COM_NOME, DTa_INICIO, DTa_FIM) 
+	    VALUES ('Marte', 'Marcianos', 'Red Valley', TO_DATE('2200-01-01', 'YYYY-MM-DD'), TO_DATE('2300-01-01', 'YYYY-MM-DD'));
+     -------------------------------------fim testes da letra D
+ --resposta
+select p.planeta, count(c.especie) as quantidade_comunidades_inteligentes 
+	from habitacao p left join especie e on p.com_especie = e.nome_cientifico 
+    and p.dta_fim > CURRENT_TIMESTAMP and e.eh_inteligente in ('s','S')
+	left join comunidade c on c.especie = e.nome_cientifico
+	group by p.planeta;
 
 
 
