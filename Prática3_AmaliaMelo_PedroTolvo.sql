@@ -1,7 +1,7 @@
 -- Entrega 3
 --Amalia Vitoria de Melo NUSP:13692417
 --Pedro Guilherme Tolvo NUSP:10492012
-
+-- Em relação aos casos de teste das consultas, faça primeiro a consulta, e após insira um a um cada caso para a verificação
 drop table COMUNIDADE cascade constraints;
 drop table DOMINANCIA cascade constraints;
 drop table ESPECIE cascade constraints;
@@ -254,20 +254,24 @@ values ('Faccao carinhosa', 'texano', 'texies');
 commit;
 
 -------------------------------------------------------
+--------letra A
 select faccao.nome_faccao, faccao.ideologia, lider.nome, lider.especie, lider.nacao from faccao
 join lider on faccao.lider_faccao = lider.CPI;
-
+---------------
+-------------- letra b
 insert into lider(CPI, nome, cargo, nacao, especie)
     values ('121231131', 'TESTE', 'cientista', 'Nacao Zumbi', 'sapiens');
 
 select lider.CPI, lider.nome, lider.nacao, lider.especie, especie.planeta_o, faccao.nome_faccao
 from lider join especie on lider.especie = especie.nome_cientifico left join faccao on lider.CPI = faccao.lider_faccao;
-
-select estrela2.nome as orbitada,	estrela2.classificacao_estrela as orbitada_classificao, estrela1.nome as orbitante, estrela1.classificacao_estrela as orbitante_classificacao 
+-----------------
+----------------- letra c
+select estrela2.nome as orbitada, estrela2.classificacao_estrela as orbitada_classificao,
+	estrela1.nome as orbitante, estrela1.classificacao_estrela as orbitante_classificacao 
 	from orbita_estrela
 	join estrela estrela1 on orbita_estrela.orbitante = estrela1.id_catalogo
 	join estrela estrela2 on orbita_estrela.orbitada = estrela2.id_catalogo;
-  
+---------------------
   
 ---------------------------------------------------- letra D
 	--------------------------testes da letra D
