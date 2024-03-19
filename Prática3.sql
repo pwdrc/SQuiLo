@@ -319,10 +319,9 @@ select estrela2.nome as orbitada,	estrela2.classificacao_estrela as orbitada_cla
 	INSERT INTO HABITACAO (PLANETA, COM_ESPECIE, COM_NOME, DTa_INICIO, DTa_FIM) 
 	    VALUES ('Marte', 'Marcianos', 'Red Valley', TO_DATE('2200-01-01', 'YYYY-MM-DD'), TO_DATE('2300-01-01', 'YYYY-MM-DD'));
      -------------------------------------fim testes da letra D
- --resposta
 select p.planeta, count(c.especie) as quantidade_comunidades_inteligentes 
 	from habitacao p left join especie e on p.com_especie = e.nome_cientifico 
-    and p.dta_fim > CURRENT_TIMESTAMP and e.eh_inteligente in ('s','S')
+    and p.dta_inicio <= CURRENT_TIMESTAMP and p.dta_fim > CURRENT_TIMESTAMP and e.eh_inteligente in ('s','S')
 	left join comunidade c on c.especie = e.nome_cientifico
 	group by p.planeta;
 
@@ -331,7 +330,24 @@ select p.planeta, count(p.com_especie) as quantidade_comunidades_por_especie
 	from habitacao p left join comunidade c on c.nome = p.com_nome and p.dta_fim > CURRENT_TIMESTAMP
     join especie e on c.especie = e.nome_cientifico 
 	group by p.planeta;
----------------------------------------------------
+------------------------------------ letra F
+	----------------- casos de teste
+		insert into orbita_planeta (planeta, estrela, distancia_min, distancia_max)
+		values('Terraço', 'NEYM1010', 112, 1336);
+		insert into orbita_planeta (planeta, estrela, distancia_min, distancia_max)
+		values('Marte', 'NEYM1010', 1124, 36);
+		insert into estrela (id_catalogo, nome, classificacao_estrela, massa, coord_x, coord_y, coord_z)
+		values ('1', 'T1', 'teste 1', 2400, 15, 132124.55, 9); 
+		insert into orbita_planeta (planeta, estrela, distancia_min, distancia_max)
+		values('Terra', '1', 4, 6);
+		insert into orbita_planeta (planeta, estrela, distancia_min, distancia_max)
+		values('Terraço', 'SKOL0420', 1, 2);
+         ---------------------------- fim casos de teste
+
+select e.nome, e.classificacao_estrela from estrela e where not exists
+	((select p.planeta from orbita_planeta p where p.estrela ='SKOL0420')
+    minus
+    (select p.planeta from orbita_planeta p where p.estrela = e.id_catalogo));
 
 
 
