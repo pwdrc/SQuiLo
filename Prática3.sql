@@ -326,8 +326,12 @@ select p.planeta, count(c.especie) as quantidade_comunidades_inteligentes
 	left join comunidade c on c.especie = e.nome_cientifico
 	group by p.planeta;
 
-
-
+----------------------------------- letra E
+select p.planeta, count(p.com_especie) as quantidade_comunidades_por_especie
+	from habitacao p left join comunidade c on c.nome = p.com_nome and p.dta_fim > CURRENT_TIMESTAMP
+    join especie e on c.especie = e.nome_cientifico 
+	group by p.planeta;
+---------------------------------------------------
 
 
 
