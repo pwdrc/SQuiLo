@@ -115,7 +115,7 @@ create table habitacao(
     com_especie varchar2(128) not null,
     com_nome varchar2(128) not null,
     dta_inicio date not null,
-    dta_fim date not null,
+    dta_fim date,
     constraint pk_habitacao primary key (planeta,com_especie,com_nome,dta_inicio),
     constraint fk_habitacao_planeta foreign key (planeta) references planeta(designacao_astronomica) on delete cascade,
     constraint fk_habitacao_comunidade foreign key (com_especie,com_nome) references comunidade(especie,nome) on delete cascade
@@ -222,6 +222,7 @@ values ('sapiens', 'humanoides', 200);
 
 insert into comunidade (especie, nome, qtd_habitantes)
 values ('texano', 'texies', null);
+
 insert into habitacao (planeta,com_especie,com_nome,dta_inicio, dta_fim)
 values ('Terra', 'sapiens', 'humanoides', to_date('12/12/2012', 'dd/mm/yyyy'), to_date('10/10/2010', 'dd/mm/yyyy'));
 
