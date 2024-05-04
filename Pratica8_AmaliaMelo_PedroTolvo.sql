@@ -195,6 +195,7 @@ insert into habitacao (planeta, especie, comunidade, data_ini)
     values ('PLANETA1','ESPECIE1','teste1',to_date('05/05/2005', 'dd/mm/yyyy'))
 
 -- criando o programa
+
 declare
     -- simular entrada do usuario
     v_faccao varchar2(15) := 'FACCAO2'; -- alterar conforme necessário
@@ -245,3 +246,49 @@ Comunidade COMUNIDADE1 já está na facção FACCAO2
 Comunidade COMUNIDADE1 encontrada no planeta PLANETA1 dominado pela nação NACAO1
 */
 
+
+DECLARE
+  -- Definindo uma exceção de usuário
+  ex_custom EXCEPTION;
+  PRAGMA EXCEPTION_INIT(ex_custom, -20001);
+
+  TYPE ComunidadesTab IS TABLE OF comunidade%ROWTYPE;
+  comunidades ComunidadesTab;
+  v_faccao VARCHAR2(15) := 'FACCAO2';
+  v_nome_comunidade comunidade.nome%TYPE;
+  v_planeta habitacao.planeta%TYPE;
+  v_nacao dominancia.nacao%TYPE;
+  v_faccao_nf nacao_faccao.faccao%TYPE;
+  CURSOR c_comunidades IS 
+    SELECT c.nome 
+    FROM comunidade c 
+    JOIN habitacao h ON h.comunidade = c.nome 
+    JOIN dominancia d ON d.planeta = h.planeta 
+    JOIN nacao_faccao nf ON nf.nacao = d.nacao 
+    WHERE nf.faccao = v_faccao 
+    AND NOT EXISTS (
+      SELECT 1 
+      FROM participa p 
+      WHERE p.comunidade = c.nome 
+      AND p.faccao = v_faccao
+    );
+BEGIN
+  OPEN c_comunidades;
+  LOOP
+    FETCH c_comunidades INTO v_nome_comunidade;
+    EXIT WHEN c_comunidades%NOTFOUND;
+    comunidades.EXTEND;
+    comunidades(comunidades.LAST) := v_nome_comunidade;
+  END LOOP;
+  CLOSE c_comunidades;
+
+  FORALL i IN comunidades.FIRST..comunidades.LAST
+    INSERT INTO faccao_comunidades VALUES (v_faccao, comunidades(i));
+EXCEPTION
+  WHEN ex_custom THEN
+    DBMS_OUTPUT.PUT_LINE('Exceção de usuário levantada');
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Nenhum dado encontrado');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Erro: ' || SQLCODE || ', Mensagem: ' || SQLERRM);
+END;
