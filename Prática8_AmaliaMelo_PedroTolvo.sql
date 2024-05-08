@@ -2,185 +2,7 @@
 -- Amalia Melo - 13692417
 -- Pedro Tolvo - 10492012
 
--- CREATE TABLE FEDERACAO(
--- 	NOME VARCHAR2(15),
--- 	DATA_FUND DATE NOT NULL,
--- 	CONSTRAINT PK_FEDERACAO PRIMARY KEY (NOME)
--- );
--- CREATE TABLE NACAO(
--- 	NOME VARCHAR2(15),
--- 	QTD_PLANETAS NUMBER,
--- 	FEDERACAO VARCHAR2(15),
--- 	CONSTRAINT PK_NACAO PRIMARY KEY (NOME),
--- 	CONSTRAINT FK_NACAO_FEDERACAO FOREIGN KEY (FEDERACAO) REFERENCES FEDERACAO(NOME) ON DELETE SET NULL,
--- 		CONSTRAINT CK_NACAO_QTD_PLANETAS CHECK (QTD_PLANETAS >= 0) -- >= 0 para poder manter o histórico de nações extintas
--- );
--- CREATE TABLE PLANETA(
--- 	ID_ASTRO VARCHAR2(15),
--- 	MASSA NUMBER,
--- 	RAIO NUMBER,
--- 	CLASSIFICACAO VARCHAR2(63),
--- 	CONSTRAINT PK_PLANETA PRIMARY KEY (ID_ASTRO),
--- 	CONSTRAINT CK_PLANETA_MASSA CHECK (MASSA > 0),
--- 	CONSTRAINT CK_PLANETA_RAIO CHECK (RAIO > 0)
--- );
--- CREATE TABLE ESPECIE(
--- 	NOME VARCHAR2(15),
--- 	PLANETA_OR VARCHAR2(15),
--- 	INTELIGENTE CHAR(1),
--- 	CONSTRAINT PK_ESPECIE PRIMARY KEY (NOME),
--- 	CONSTRAINT FK_ESPECIE_PLANETA FOREIGN KEY (PLANETA_OR) REFERENCES PLANETA(ID_ASTRO) ON DELETE CASCADE,
--- 	CONSTRAINT CK_ESPECIE_INTELIGENTE CHECK (INTELIGENTE IN ('V', 'F'))
--- );
--- CREATE TABLE LIDER(
--- 	CPI CHAR(14),
--- 	NOME VARCHAR2(15),
--- 	CARGO CHAR(10) NOT NULL,
--- 	NACAO VARCHAR2(15) NOT NULL,
--- 	ESPECIE VARCHAR2(15) NOT NULL,
--- 	CONSTRAINT PK_LIDER PRIMARY KEY (CPI),
--- 	CONSTRAINT FK_LIDER_NACAO FOREIGN KEY (NACAO) REFERENCES NACAO(NOME) ON DELETE CASCADE,
--- 	CONSTRAINT FK_LIDER_ESPECIE FOREIGN KEY (ESPECIE) REFERENCES ESPECIE(NOME) ON DELETE CASCADE,
--- 	CONSTRAINT CK_LIDER_CPI CHECK (REGEXP_LIKE(CPI, '^\d{3}\.\d{3}\.\d{3}-\d{2}$')),
--- 	CONSTRAINT CK_LIDER_CARGO CHECK (CARGO IN ('COMANDANTE', 'OFICIAL', 'CIENTISTA')) -- Uppercase para padronização
--- );
--- CREATE TABLE FACCAO(
--- 	NOME VARCHAR2(15),
--- 	LIDER CHAR(14) NOT NULL,
--- 	IDEOLOGIA VARCHAR2(15),
--- 	QTD_NACOES NUMBER,
--- 	CONSTRAINT PK_FACCAO PRIMARY KEY (NOME),
--- 	CONSTRAINT FK_FACCAO_LIDER FOREIGN KEY (LIDER) REFERENCES LIDER(CPI),
--- 	CONSTRAINT CK_FACCAO_IDEOLOGIA CHECK (
--- 		IDEOLOGIA IN ('PROGRESSITA', 'TOTALITARIA', 'TRADICIONALISTA')
--- 	),
--- 	CONSTRAINT CK_FACCAO_QTD_NACOES CHECK (QTD_NACOES >= 0),
--- 	-- >= 0 para poder manter o histórico de facções extintas
--- 	CONSTRAINT UN_FACCAO_LIDER UNIQUE (LIDER)
--- );
--- CREATE TABLE NACAO_FACCAO(
--- 	NACAO VARCHAR2(15),
--- 	FACCAO VARCHAR2(15),
--- 	CONSTRAINT PK_NF PRIMARY KEY (NACAO, FACCAO),
--- 	CONSTRAINT FK_NF_NACAO FOREIGN KEY (NACAO) REFERENCES NACAO(NOME) ON DELETE CASCADE,
--- 	CONSTRAINT FK_NF_FACCAO FOREIGN KEY (FACCAO) REFERENCES FACCAO(NOME) ON DELETE CASCADE
--- );
--- CREATE TABLE ESTRELA(
--- 	ID_ESTRELA VARCHAR2(31),
--- 	NOME VARCHAR2(31),
--- 	CLASSIFICACAO VARCHAR2(31),
--- 	MASSA NUMBER,
--- 	X NUMBER NOT NULL,
--- 	Y NUMBER NOT NULL,
--- 	Z NUMBER NOT NULL,
--- 	CONSTRAINT PK_ESTRELA PRIMARY KEY (ID_ESTRELA),
--- 	CONSTRAINT CK_ESTRELA_MASSA CHECK (MASSA > 0),
--- 	CONSTRAINT UN_ESTRELA_COORDS UNIQUE (X, Y, Z)
--- );
--- CREATE TABLE COMUNIDADE(
--- 	ESPECIE VARCHAR2(15),
--- 	NOME VARCHAR2(15),
--- 	QTD_HABITANTES NUMBER NOT NULL,
--- 	CONSTRAINT PK_COMUNIDADE PRIMARY KEY (ESPECIE, NOME),
--- 	CONSTRAINT CK_COMUNIDADE_QTD_HABITANTES CHECK (QTD_HABITANTES >= 0),
--- 	-- >= 0 para poder manter o histórico de comunidades extintas
--- 	CONSTRAINT FK_COMUNIDADE_ESPECIE FOREIGN KEY (ESPECIE) REFERENCES ESPECIE(NOME) ON DELETE CASCADE
--- );
--- CREATE TABLE PARTICIPA(
--- 	FACCAO VARCHAR2(15),
--- 	ESPECIE VARCHAR2(15),
--- 	COMUNIDADE VARCHAR2(15),
--- 	CONSTRAINT PK_PARTICIPA PRIMARY KEY (FACCAO, ESPECIE, COMUNIDADE),
--- 	CONSTRAINT FK_PARTICIPA_FACCAO FOREIGN KEY (FACCAO) REFERENCES FACCAO(NOME) ON DELETE CASCADE,
--- 	CONSTRAINT FK_PARTICIPA_COMUNIDADE FOREIGN KEY (ESPECIE, COMUNIDADE) REFERENCES COMUNIDADE(ESPECIE, NOME) ON DELETE CASCADE
--- );
--- CREATE TABLE HABITACAO(
--- 	PLANETA VARCHAR2(15),
--- 	ESPECIE VARCHAR2(15),
--- 	COMUNIDADE VARCHAR2(15),
--- 	DATA_INI DATE,
--- 	DATA_FIM DATE,
--- 	CONSTRAINT PK_HABITACAO PRIMARY KEY (PLANETA, ESPECIE, COMUNIDADE, DATA_INI),
--- 	CONSTRAINT FK_HABITACAO_PLANETA FOREIGN KEY (PLANETA) REFERENCES PLANETA(ID_ASTRO),
--- 	CONSTRAINT FK_HABITACAO_COMUNIDADE FOREIGN KEY (ESPECIE, COMUNIDADE) REFERENCES COMUNIDADE(ESPECIE, NOME),
--- 	CONSTRAINT CK_HABITACAO_DATA CHECK (
--- 		DATA_FIM IS NULL
--- 		OR DATA_FIM > DATA_INI
--- 	)
--- );
--- CREATE TABLE DOMINANCIA(
--- 	PLANETA VARCHAR2(15),
--- 	NACAO VARCHAR2(15),
--- 	DATA_INI DATE,
--- 	DATA_FIM DATE,
--- 	CONSTRAINT PK_DOMINANCIA PRIMARY KEY (NACAO, PLANETA, DATA_INI),
--- 	CONSTRAINT FK_DOMINANCIA_NACAO FOREIGN KEY (NACAO) REFERENCES NACAO(NOME),
--- 	CONSTRAINT FK_DOMINANCIA_PLANETA FOREIGN KEY (PLANETA) REFERENCES PLANETA(ID_ASTRO),
--- 	CONSTRAINT CK_DOMINANCIA_DATA CHECK (
--- 		DATA_FIM IS NULL
--- 		OR DATA_FIM > DATA_INI
--- 	)
--- );
--- CREATE TABLE SISTEMA(
--- 	ESTRELA VARCHAR2(31),
--- 	NOME VARCHAR2(31),
--- 	CONSTRAINT PK_SISTEMA PRIMARY KEY (ESTRELA),
--- 	CONSTRAINT FK_SISTEMA_ESTRELA FOREIGN KEY (ESTRELA) REFERENCES ESTRELA(ID_ESTRELA) ON DELETE CASCADE
--- );
--- CREATE TABLE ORBITA_ESTRELA(
--- 	ORBITANTE VARCHAR2(31),
--- 	ORBITADA VARCHAR2(31),
--- 	DIST_MIN NUMBER,
--- 	DIST_MAX NUMBER,
--- 	PERIODO NUMBER,
--- 	CONSTRAINT PK_OE PRIMARY KEY (ORBITANTE, ORBITADA),
--- 	CONSTRAINT FK_OE_ORBITANTE FOREIGN KEY (ORBITANTE) REFERENCES ESTRELA(ID_ESTRELA) ON DELETE CASCADE,
--- 	CONSTRAINT FK_OE_ORBITADA FOREIGN KEY (ORBITADA) REFERENCES ESTRELA(ID_ESTRELA) ON DELETE CASCADE,
--- 	CONSTRAINT CK_OE_ORBITANTE_ORBITADA CHECK (ORBITANTE <> ORBITADA),
--- 	CONSTRAINT CK_OE_DIST CHECK (DIST_MAX >= DIST_MIN),
--- 	-- >= para permitir órbitas circulares
--- 	CONSTRAINT CK_OE_PERIODO CHECK (PERIODO > 0)
--- );
--- CREATE TABLE ORBITA_PLANETA(
--- 	PLANETA VARCHAR2(15),
--- 	ESTRELA VARCHAR2(31),
--- 	DIST_MIN NUMBER,
--- 	DIST_MAX NUMBER,
--- 	PERIODO NUMBER,
--- 	CONSTRAINT PK_ORBITA_PLANETA PRIMARY KEY (PLANETA, ESTRELA),
--- 	CONSTRAINT FK_OP_ESTRELA FOREIGN KEY (ESTRELA) REFERENCES ESTRELA(ID_ESTRELA) ON DELETE CASCADE,
--- 	CONSTRAINT FK_OP_PLANETA FOREIGN KEY (PLANETA) REFERENCES PLANETA(ID_ASTRO) ON DELETE CASCADE,
--- 	CONSTRAINT CK_OP_DIST CHECK (DIST_MAX >= DIST_MIN),
--- 	-- >= para permitir órbitas circulares
--- 	CONSTRAINT CK_OP_PERIODO CHECK (PERIODO > 0)
--- );
-
--- Aspectos que serão levados em consideração na correção:
--- • faça as inserções/atualizações necessárias para testar o código PL/SQL criado;
--- • use estruturas de controle variadas;
--- • faça tratamento de exceções; além de definir suas próprias exceções, use também exceções
--- PL/SQL pré-definidas; pesquise a lista de exceções no manual – cuidado para não criar uma
--- exceção de usuário para algo que já existe como erro ou exceção pré-definida!!!
--- • em cada exercício, inclua o resultado da execução do código PL/SQL no relatório;
--- • teste o código: casos de sucesso e casos de erro. Teste as exceções!!!
--- • projete bem os algoritmos, pois tanto a eficiência das consultas quanto dos algoritmos utilizados
--- serão analisados na correção;
--- • quando o código envolver dados que seriam "entrada de usuário", faça atribuição de valores a
--- variáveis e usa-as no código (ou seja, NÃO use esses valores de entrada diretamente na consulta
--- SQL e/ou código PL/SQL - use variáveis, como seria numa aplicação real).
-
--- Implemente um programa PL/SQL que, dada uma facção (entrada de usuário), selecione as
--- comunidades que habitam planetas dominados por nações onde a facção está presente
--- (NacaoFaccao), mas que ainda não participam da facção (Participa). Cadastre essas
--- comunidades como novas participantes da facção. Para este exercício:
--- a. pesquise CURSOR FOR LOOP (tipos: Explícito e SQL) e escolha um deles para usar. Use
--- coleção Nested Table. As tuplas resultantes da consulta por comunidades devem ser
--- atribuídas uma a uma à coleção, isto é, sem usar BULK COLLECT.
--- b. Pesquise FORALL e use para o cadastro das comunidades como novas participantes da
--- facção. Pesquise e explique se há diferença de performance entre usar FORALL com a
--- coleção ou percorrer a coleção com FOR LOOP para realizar as inserções.
-
-
+--1)
 -- inserindo alguns dados para o desenvolvimento do exercício
 insert into comunidade (especie, nome, qtd_habitantes)
     values ('ESPECIE1', 'teste0', 2);
@@ -256,37 +78,107 @@ values ('Deserunt vero.', 'Et iure earum.', to_date('04/05/1025','dd/mm/yyyy'), 
 insert into dominancia (nacao, planeta, data_ini, data_fim)
 values ('Nam ut a.', 'Ut quisquam.', to_date('04/05/1025','dd/mm/yyyy'), to_date('16/05/2005','dd/mm/yyyy'));
 
-select dom.nacao as nacao_atual from planeta p
-join dominancia dom on dom.planeta = p.id_astro where dom.data_fim > current_date or dom.data_fim is null;
-
-select p.id_astro, dom.nacao as nacao_atual, dom.data_ini, dom.data_fim from planeta p
-right join dominancia dom on dom.planeta = p.id_astro 
-;
-
-select distinct p.id_astro,dom.nacao as nacao_atual, dom.data_ini, dom.data_fim
-from planeta p
-join dominancia dom on dom.planeta = p.id_astro
-order by p.id_astro, dom.data_ini desc;
--- pegar a primeira linha que contem o planeta
--- jogar isso em uma coleção e tratar a parte de trazer apenas uma linha por planeta com PL
-
-
-select distinct p.id_astro,dom.nacao as nacao_atual, dom.data_ini, dom.data_fim
-from planeta p
-join dominancia dom on dom.planeta = p.id_astro
-order by p.id_astro, dom.data_ini desc;
--- jogar isso em uma coleção e tratar a parte de trazer apenas uma linha por planeta com PL
-
-
 insert into habitacao (planeta,especie,comunidade,data_ini, data_fim)
 values ('Et iure earum.', 'Id sed', 'Teste3', to_date('12/12/2001', 'dd/mm/yyyy'), to_date('10/10/2010', 'dd/mm/yyyy'));
 
 insert into habitacao (planeta,especie,comunidade,data_ini, data_fim)
 values ('Et iure earum.', 'Ea qui modi', 'Teste0', to_date('12/12/2001', 'dd/mm/yyyy'), to_date('10/10/2010', 'dd/mm/yyyy'));
+         
 
-select * from habitacao;
+DECLARE
+    TYPE planeta_info_type IS RECORD (
+        id_astro PLANETA.ID_ASTRO%TYPE,
+        nacao_atual DOMINANCIA.NACAO%TYPE,
+        data_ini DOMINANCIA.DATA_INI%TYPE,
+        data_fim DOMINANCIA.DATA_FIM%TYPE,
+        qtd_comunidades NUMBER,
+        qtd_especies NUMBER,
+        qtd_habitantes NUMBER,
+        qtd_faccoes NUMBER,
+        faccao_majoritaria VARCHAR2(100),
+        qtd_especies_origem NUMBER
+    );
+    
+    TYPE planeta_info_table IS TABLE OF planeta_info_type INDEX BY PLS_INTEGER;
+    
+    v_planeta_info planeta_info_table;
+    v_nacao_atual DOMINANCIA.NACAO%TYPE;
+    v_data_ini DOMINANCIA.DATA_INI%TYPE;
+    v_data_fim DOMINANCIA.DATA_FIM%TYPE;
+    v_qtd_comunidades NUMBER;
+    v_qtd_especies NUMBER;
+    v_qtd_habitantes NUMBER;
+    v_qtd_faccoes NUMBER;
+    v_faccao_majoritaria VARCHAR2(100);
+    v_qtd_especies_origem NUMBER;
+BEGIN
+    FOR r_planeta IN (SELECT DISTINCT p.id_astro
+                      FROM planeta p
+                      JOIN dominancia dom ON dom.planeta = p.id_astro
+                      ORDER BY p.id_astro) LOOP
+        BEGIN
+             SELECT d.nacao, d.data_ini, d.data_fim
+            INTO v_nacao_atual, v_data_ini, v_data_fim
+            FROM (
+                SELECT nacao, data_ini, data_fim
+                FROM dominancia
+                WHERE planeta = r_planeta.id_astro
+                ORDER BY data_ini DESC
+            ) d
+            WHERE ROWNUM = 1;
 
-select distinct hab.planeta, count(hab.comunidade), count(especie), count(qtd_habitantes) 
-from habitacao hab join comunidade comu where group by planeta;               
+            SELECT COUNT(DISTINCT c.nome)
+            INTO v_qtd_comunidades
+            FROM comunidade c
+            JOIN habitacao h ON h.comunidade = c.nome
+            WHERE h.planeta = r_planeta.id_astro;
 
+            SELECT COUNT(DISTINCT e.nome)
+            INTO v_qtd_especies
+            FROM especie e
+            WHERE e.planeta_or = r_planeta.id_astro;
 
+            SELECT COUNT(*)
+            INTO v_qtd_habitantes
+            FROM habitacao
+            WHERE planeta = r_planeta.id_astro;
+
+            -- Adicione consultas adicionais para calcular a quantidade de facções e a facção majoritária
+
+            SELECT COUNT(DISTINCT e.nome)
+            INTO v_qtd_especies_origem
+            FROM especie e
+            WHERE e.planeta_or = r_planeta.id_astro;
+
+            v_planeta_info(r_planeta.id_astro).id_astro := r_planeta.id_astro;
+            v_planeta_info(r_planeta.id_astro).nacao_atual := v_nacao_atual;
+            v_planeta_info(r_planeta.id_astro).data_ini := v_data_ini;
+            v_planeta_info(r_planeta.id_astro).data_fim := v_data_fim;
+            v_planeta_info(r_planeta.id_astro).qtd_comunidades := v_qtd_comunidades;
+            v_planeta_info(r_planeta.id_astro).qtd_especies := v_qtd_especies;
+            v_planeta_info(r_planeta.id_astro).qtd_habitantes := v_qtd_habitantes;
+            v_planeta_info(r_planeta.id_astro).qtd_faccoes := v_qtd_faccoes;
+            v_planeta_info(r_planeta.id_astro).faccao_majoritaria := v_faccao_majoritaria;
+            v_planeta_info(r_planeta.id_astro).qtd_especies_origem := v_qtd_especies_origem;
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                -- Tratamento de exceção para quando não há dados para uma determinada consulta
+                NULL;
+        END;
+    END LOOP;
+
+    -- Loop para imprimir os resultados
+    FOR i IN 1..v_planeta_info.COUNT LOOP
+        DBMS_OUTPUT.PUT_LINE('Planeta: ' || v_planeta_info(i).id_astro);
+        DBMS_OUTPUT.PUT_LINE('Nação Atual: ' || v_planeta_info(i).nacao_atual);
+        DBMS_OUTPUT.PUT_LINE('Data de Início da Última Dominação: ' || TO_CHAR(v_planeta_info(i).data_ini, 'DD/MM/YYYY'));
+        DBMS_OUTPUT.PUT_LINE('Data de Fim da Última Dominação: ' || TO_CHAR(v_planeta_info(i).data_fim, 'DD/MM/YYYY'));
+        DBMS_OUTPUT.PUT_LINE('Quantidade de Comunidades: ' || v_planeta_info(i).qtd_comunidades);
+        DBMS_OUTPUT.PUT_LINE('Quantidade de Espécies: ' || v_planeta_info(i).qtd_especies);
+        DBMS_OUTPUT.PUT_LINE('Quantidade de Habitantes: ' || v_planeta_info(i).qtd_habitantes);
+        DBMS_OUTPUT.PUT_LINE('Quantidade de Facções: ' || v_planeta_info(i).qtd_faccoes);
+        DBMS_OUTPUT.PUT_LINE('Facção Majoritária: ' || v_planeta_info(i).faccao_majoritaria);
+        DBMS_OUTPUT.PUT_LINE('Quantidade de Espécies de Origem: ' || v_planeta_info(i).qtd_especies_origem);
+        DBMS_OUTPUT.PUT_LINE('');
+    END LOOP;
+END;
