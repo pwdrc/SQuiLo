@@ -1,4 +1,4 @@
---Am·lia VitÛria de Melo NUSP:13692417
+--Am√°lia Vit√≥ria de Melo NUSP:13692417
 --Pedro Guilherme Tolvo NUSP:10492012
 
 create table federacao (
