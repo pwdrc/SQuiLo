@@ -1,3 +1,4 @@
+--1)
 /*
 Implemente uma função que calcule a distância entre duas estrelas (pode ser distância
 Euclididana)
@@ -102,3 +103,30 @@ entre estrelas.
 */
 
 create or 
+--2)
+/*Considerando que:
+- a função/cargo de cada usuário será tratado em aplicação
+- haverá 4 telas, uma para cada usuário
+- cada tela só permitirá que as funções desse usuário sejam executadas
+Logo, não é necessário se precoupar, diretamente, com o cargo do usuário no banco de dados*/
+CREATE OR REPLACE PROCEDURE remover_faccao_nacao ( 
+    p_lider IN OUT Faccao.lider%TYPE, 
+    p_faccao IN OUT Faccao.nome%TYPE, 
+    p_nacao OUT Nacao_faccao.nacao%TYPE ) AS 
+    v_lider Faccao.lider%TYPE;
+    v_faccao Faccao.nome%TYPE; 
+    v_nacao  Nacao_faccao.nacao%TYPE;
+    e_naoexiste EXCEPTION; 
+    e_naopode EXCEPTION;
+    e_naolider EXCEPTION;
+   
+     BEGIN 
+     select lider into v_lider from Faccao where faccao.nome = p.faccao; 
+     if v_lider = p_lider
+        then
+            select faccao into v_faccao from Nacao_faccao where faccao.lider = v_lider;
+            then
+        else
+     EXCEPTION 
+     WHEN NO_DATA_FOUND THEN RAISE e_naoexiste; 
+ END remover_faccao_nacao; 
