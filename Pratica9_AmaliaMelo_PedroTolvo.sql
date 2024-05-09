@@ -101,4 +101,64 @@ que otimize o cálculo de distâncias
 entre estrelas.
 */
 
-create or 
+/*
+constraints da tabela estrela
+CK_ESTRELA_MASSA	Check	MASSA > 0
+PK_ESTRELA	Primary_Key	
+SYS_C00230128	Check	"X" IS NOT NULL
+SYS_C00230129	Check	"Y" IS NOT NULL
+SYS_C00230130	Check	"Z" IS NOT NULL
+UN_ESTRELA_COORDS	Unique	
+*/
+
+create or replace package CIENTISTA as
+    -- CRUD de estrelas
+    procedure create_estrela(
+        id_estrela estrela.id_estrela%type,
+        nome_estrela estrela.nome%type,
+        classificacao_estrela estrela.classificacao%type,
+        massa_estrela estrela.massa%type,
+        x_estrela estrela.X%type,
+        y_estrela estrela.Y%type,
+        z_estrela estrela.Z%type
+    );
+
+    procedure read_estrela(
+        id_estrela estrela.id_estrela%type
+    );
+
+    procedure update_estrela(
+        id_estrela estrela.id_estrela%type,
+        new_data_estrela estrela%rowtype
+    );
+
+    procedure delete_estrela(
+        nome_estrela estrela.nome%type
+    );
+
+    -- Informações de Estrelas, Planetas e Sistemas
+    procedure relatorio_estrela(
+        nome_estrela estrela.nome%type
+    );
+
+    procedure relatorio_planeta(
+        nome_planeta planeta.nome%type
+    );
+
+    procedure relatorio_sistema(
+        nome_sistema sistema.nome%type
+    );
+
+    -- Bônus (1.5)
+    procedure relatorio_corpos_celestes(
+        nome_corpo_corpo_estrela estrela.nome%type,
+        distancia_min number,
+        distancia_max number
+    );
+
+    -- Bônus (1.0)
+    function distancia_otimizada(
+        estrela_a estrela.id_estrela%type,
+        estrela_b estrela.id_estrela%type
+    ) return number;
+end CIENTISTA;
