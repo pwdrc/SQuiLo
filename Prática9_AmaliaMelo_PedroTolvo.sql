@@ -96,26 +96,30 @@ Create or replace package Comandante as
     procedure verificar_federacao_existe(
     p_nacao Nacao.nome%type);
     
-     
-    
 end Comandante;
 
+/
+
 Create or replace package body Comandante as 
-    Procedure criar_nova_federacao(p_nacao Nacao.nome%type)
+    Procedure Criar_nova_federacao(p_nacao Nacao.nome%type)
     as
     begin 
-        
-    end criar_nova_federacao;
+        insert into federacao values ('teste', EXTRACT (YEAR FROM SYSDATE));
+        update Nacao set federacao = 'teste' where nome = p_nacao;
+    end Criar_nova_federacao;
 
     Procedure verificar_federacao_existe(p_nacao Nacao.nome%type)
     as
     begin
         select federacao into var_fedaracao from Nacao
             where nome = p_nacao;
-        if(var_federacao == null)
-            Criar_nova_federacao(p_nacao);
+        if(var_federacao is null)
+            Criar_nova_federacao(p_nacao)
         else raise e_federacao_existe;
     end verificar_federacao_existe;   
+    
+end Comandante;
+
 
 -- 4)
 /*
