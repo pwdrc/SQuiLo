@@ -1,3 +1,6 @@
+--Amália Vitória de Melo NUSP:13692417
+--Pedro Guilherme Tolvo NUSP:1020
+
 /*
 Implemente uma função que calcule a distância entre duas estrelas (pode ser distância
 Euclididana)
@@ -162,3 +165,44 @@ create or replace package CIENTISTA as
         estrela_b estrela.id_estrela%type
     ) return number;
 end CIENTISTA;
+
+
+--2) 
+/*No Projeto Final, usaremos packages para modularizar as 
+funções de cada um dos nossos uusuários, sendo o lider facção um deles*/
+
+Create or replace package Lider_Faccao as
+    e_naoEncontrado Exception;
+    
+    Procedure remover_faccao_de_nacao(
+    p_faccao Faccao.Nome%type);
+end Lider_Faccao;
+
+/
+
+Create or replace package body Lider_Faccao as
+    Procedure remover_faccao_de_nacao(p_faccao Faccao.Nome%type)
+    as 
+    begin
+        Delete from nacao_faccao where faccao = p_faccao;
+        IF SQL%NOTFOUND then raise e_naoEncontrado;
+        end if;
+    end remover_faccao_de_nacao;
+end Lider_Faccao;
+
+/*
+Considerando que:
+- a função/cargo de cada usuário será tratado em aplicação
+- haverá 4 telas, uma para cada usuário
+- cada tela só permitirá que as funções desse usuário sejam executadas
+Logo, não é necessário se precoupar, diretamente, com o cargo do usuário no banco de dados
+*/
+
+--3)
+Create or replace package Comandante as
+    e_naoEncontrado Exception;
+    
+    Procedure Criar_nova_federacao(
+    p_nacao Nacao.Nome%type);
+end Lider_Faccao;
+
