@@ -84,3 +84,61 @@ v_alunos(3) := 'ufscar';
 - **collection type**
 - nested table
 - varray
+
+_______________________________________________________________________________________________________________
+
+## Trigger de DML
+- restrições de conssitência e validade que não podem ser implementados com constraints
+- mecanismos de validação que envolvam pesquisas em tabelas
+- conteúdo derivado
+- atualizações de outras tabelas em função da atualização de uma determinada tabela
+- ...
+
+### Conceitos
+- tabela desencadeadora
+- instrução de disparo (insert, update, delete)
+- timing (before, after)
+- nível -> linha (trigger executa 1 vez para cada linha afetada) ou instrução (executa somente 1 vez por instrução)
+
+### Exemplo
+
+```sql
+create or replace trigger NroAlunos
+after delete on matricula
+for each row -- nivel de linha
+begin
+.....
+exception
+.....
+end NroAlunos
+```
+
+### Identificadores de correlação (pseudoregistros)
+- ":old" e ":new"
+- para triggers com nível de linha
+
+```sql
+create or replace trigger nrodealunos
+after delete on matricula
+for each row
+
+begin
+  update turma
+    set nalunos = nalunos - 1
+    where sigla = :old.sigla and numero = :old.numero;
+....
+```
+```sql
+create or rpelace trigger acertanota
+  before insert or update on matricula
+  for each for
+  when (new.nota < 0)
+
+begin
+  :new.nota := 0;
+....
+```
+
+## Triggers intead of
+- visões não atualizáveis e visões com junção atualizáveis
+- 
