@@ -84,11 +84,38 @@ Package Body LIDER_FACCAO compilado
 
 --3)
 Create or replace package Comandante as
+
     e_naoEncontrado Exception;
+    e_federacao_existe Exception;
     
     Procedure Criar_nova_federacao(
     p_nacao Nacao.Nome%type);
-end Lider_Faccao;
+    
+    var_federacao Nacao.Federacao%type;
+    
+    procedure verificar_federacao_existe(
+    p_nacao Nacao.nome%type);
+    
+     
+    
+end Comandante;
+
+Create or replace package body Comandante as 
+    Procedure criar_nova_federacao(p_nacao Nacao.nome%type)
+    as
+    begin 
+        
+    end criar_nova_federacao;
+
+    Procedure verificar_federacao_existe(p_nacao Nacao.nome%type)
+    as
+    begin
+        select federacao into var_fedaracao from Nacao
+            where nome = p_nacao;
+        if(var_federacao == null)
+            Criar_nova_federacao(p_nacao);
+        else raise e_federacao_existe;
+    end verificar_federacao_existe;   
 
 -- 4)
 /*
