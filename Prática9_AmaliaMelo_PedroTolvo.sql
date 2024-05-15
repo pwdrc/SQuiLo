@@ -1,7 +1,13 @@
 --Amália Vitória de Melo NUSP:13692417
 --Pedro Guilherme Tolvo NUSP:10492012
 --1)
-
+/*
+Considerando que:
+- a função/cargo de cada usuário será tratado em aplicação
+- haverá 4 telas, uma para cada usuário
+- cada tela só permitirá que as funções desse usuário sejam executadas
+Logo, não é necessário se precoupar, diretamente, com o cargo do usuário no banco de dados
+*/
 create or replace function distancia (
     estrela_a estrela.id_estrela%type,
     estrela_b estrela.id_estrela%type
