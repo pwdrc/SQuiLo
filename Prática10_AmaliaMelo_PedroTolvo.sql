@@ -1,3 +1,45 @@
+--1)
+
+--a)
+Create or replace trigger federacao_nacao
+before delete on Nacao
+for each row
+declare
+    e_nao_pode exception;
+    v_confere number;
+Begin
+    Select count(Federacao) into v_confere from Nacao;
+    if(v_confere>2) then 
+        Delete from nacao where federacao = :old.federacao;
+    else raise e_nao_pode;
+    end if;
+exception
+    when e_nao_pode
+        then dbms_output.put_line('Não é possível executar a operacao');
+    when others
+        then  dbms_output.put_line('Erro nro: ' || SQLCODE || '. Mensagem: ' || SQLERRM );
+end federacao_nacao;
+
+Create or replace trigger federacao_nacao_update
+after update on Nacao
+for each row
+declare
+    v_confere number;
+Begin
+    Select count(Federacao) into v_confere from Nacao
+        where federacao = :old.federacao;
+    if(v_confere<1) then 
+        Delete from Federacao where Nome = :old.federacao;
+    end if;
+exception
+    when others
+        then  dbms_output.put_line('Erro nro: ' || SQLCODE || '. Mensagem: ' || SQLERRM );
+end federacao_nacao_update;
+
+--b)
+
+
+--2)
 /*
 Usando view e trigger instead-of implemente a funcionalidade (de Gerenciamento) 
 a.iii do Líder de Facção: 
