@@ -139,7 +139,7 @@ begin
 ....
 ```
 
-## Triggers intead of
+## Triggers instead of
 - visões não atualizáveis e visões com junção atualizáveis
 
 ## Triggers de sistema
