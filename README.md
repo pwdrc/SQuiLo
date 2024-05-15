@@ -141,4 +141,35 @@ begin
 
 ## Triggers intead of
 - visões não atualizáveis e visões com junção atualizáveis
-- 
+
+## Triggers de sistema
+Os triggers de sistema são acionados automaticamente por eventos do sistema, como a criação ou exclusão de tabelas, alterações de esquema, entre outros. Eles são úteis para automatizar tarefas administrativas ou aplicar regras de negócio em nível de sistema.
+
+```sql
+create or replace trigger logddl
+    after drop on schema
+
+begin
+    insert into logddl values (user, sysdate, ora_dict_obj_type, ora_dict_obj_name);
+
+end;
+
+/*
+Este é um trigger em SQL que é ativado após a operação de DROP em qualquer objeto do esquema. 
+
+O que ele faz é inserir um registro na tabela `logddl` sempre que um objeto do esquema é removido. 
+
+Os valores inseridos na tabela `logddl` são:
+
+- `user`: O nome do usuário que executou a operação de DROP.
+- `sysdate`: A data e hora atuais do sistema.
+- `ora_dict_obj_type`: O tipo do objeto que foi removido (por exemplo, TABELA, VISÃO, PROCEDIMENTO, etc.).
+- `ora_dict_obj_name`: O nome do objeto que foi removido.
+
+Portanto, este trigger é útil para manter um log de todas as operações de DROP realizadas no esquema, juntamente com informações sobre quem realizou a operação, quando foi realizada e qual objeto foi afetado.
+*/
+```
+
+### Outros comandos para trigger:
+- alter/drop trigger
+- problema da tabela mutante - resolver com compound trigger
