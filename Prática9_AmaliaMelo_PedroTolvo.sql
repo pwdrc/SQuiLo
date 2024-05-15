@@ -1,13 +1,7 @@
 --Amália Vitória de Melo NUSP:13692417
---Pedro Guilherme Tolvo NUSP:1020
+--Pedro Guilherme Tolvo NUSP:10492012
+--1)
 
-/*
-Implemente uma função que calcule a distância entre duas estrelas (pode ser distância
-Euclididana)
-*/
-/*
-cria (ou substitui) a função armazenada para o cálculo da distância
-*/
 create or replace function distancia (
     estrela_a estrela.id_estrela%type,
     estrela_b estrela.id_estrela%type
@@ -44,13 +38,28 @@ A distância entre Zet2Mus e Citadelle é 233,98187
 --------------
 */
 
-/*
-Implemente as seguines funcionalidades relacionadas ao 
-usuário Cientista do Sistema Sociedade
-Galática (ver descrição do projeto final):
-a. Gerenciamento: item 4.a (CRUD de estrelas)
-b. Relatórios: item 4.a (Informações de Estrelas, Planetas e Sistemas)
-*/
+--2) 
+/*No Projeto Final, usaremos packages para modularizar as 
+funções de cada um dos nossos uusuários, sendo o lider facção um deles*/
+
+Create or replace package Lider_Faccao as
+    e_naoEncontrado Exception;
+    
+    Procedure remover_faccao_de_nacao(
+    p_faccao Faccao.Nome%type);
+end Lider_Faccao;
+
+/
+
+Create or replace package body Lider_Faccao as
+    Procedure remover_faccao_de_nacao(p_faccao Faccao.Nome%type)
+    as 
+    begin
+        Delete from nacao_faccao where faccao = p_faccao;
+        IF SQL%NOTFOUND then raise e_naoEncontrado;
+        end if;
+    end remover_faccao_de_nacao;
+end Lider_Faccao;
 
 /*
 Considerando que:
@@ -59,59 +68,29 @@ Considerando que:
 - cada tela só permitirá que as funções desse usuário sejam executadas
 Logo, não é necessário se precoupar, diretamente, com o cargo do usuário no banco de dados
 */
--- a. Gerenciamento: item 4.a (CRUD de estrelas)
--- create
--- read
--- update
--- delete
-
--- b. Relatórios: item 4.a 
--- (Informações de Estrelas, Planetas e Sistemas)
+--SAIDA
 /*
-Informações de Estrelas, Planetas e 
-Sistemas: o cientista está interessado
-principalmente em catalogar corpos 
-celestes. Assim, ele deve ter acesso 
-a relatórios de estrelas, planetas e 
-sistemas, que sirvam de apoio a 
-atividades como possível
-ampliação do catálogo existente e
-preenchimento de valores faltantes no 
-sistema.
+Package LIDER_FACCAO compilado
 
-b. Bônus (1.5): É também de interesse 
-para o cientista a capacidade de analisar
-grupos de sistemas próximos e/ou 
-densamente compactados, assim como
-informações como a prevalência ou 
-correlação de características 
-específicas de estrelas/planetas em 
-regiões particulares da galáxia. 
-Em outras palavras, quando um cientista
-seleciona um sistema/estrela e um
-intervalo de distâncias, o relatório
-deve fornecer métricas relevantes para 
-todos os corpos celestes nesse intervalo,
-tomando como referência o sistema/estrela
-selecionado. Por exemplo: "Desejo obter
-informações sobre todos os corpos 
-celestes situados a uma distância 
-superior a 100 anos-luz e inferior a 200 
-anos-luz do Sistema Solar".
 
-c. Bônus (1.0): Implemente uma solução 
-que otimize o cálculo de distâncias 
-entre estrelas.
+Package Body LIDER_FACCAO compilado
 */
 
+--3)
+Create or replace package Comandante as
+    e_naoEncontrado Exception;
+    
+    Procedure Criar_nova_federacao(
+    p_nacao Nacao.Nome%type);
+end Lider_Faccao;
+
+-- 4)
 /*
-constraints da tabela estrela
-CK_ESTRELA_MASSA	Check	MASSA > 0
-PK_ESTRELA	Primary_Key	
-SYS_C00230128	Check	"X" IS NOT NULL
-SYS_C00230129	Check	"Y" IS NOT NULL
-SYS_C00230130	Check	"Z" IS NOT NULL
-UN_ESTRELA_COORDS	Unique	
+Considerando que:
+- a função/cargo de cada usuário será tratado em aplicação
+- haverá 4 telas, uma para cada usuário
+- cada tela só permitirá que as funções desse usuário sejam executadas
+Logo, não é necessário se precoupar, diretamente, com o cargo do usuário no banco de dados
 */
 
 create or replace package CIENTISTA as
@@ -165,44 +144,3 @@ create or replace package CIENTISTA as
         estrela_b estrela.id_estrela%type
     ) return number;
 end CIENTISTA;
-
-
---2) 
-/*No Projeto Final, usaremos packages para modularizar as 
-funções de cada um dos nossos uusuários, sendo o lider facção um deles*/
-
-Create or replace package Lider_Faccao as
-    e_naoEncontrado Exception;
-    
-    Procedure remover_faccao_de_nacao(
-    p_faccao Faccao.Nome%type);
-end Lider_Faccao;
-
-/
-
-Create or replace package body Lider_Faccao as
-    Procedure remover_faccao_de_nacao(p_faccao Faccao.Nome%type)
-    as 
-    begin
-        Delete from nacao_faccao where faccao = p_faccao;
-        IF SQL%NOTFOUND then raise e_naoEncontrado;
-        end if;
-    end remover_faccao_de_nacao;
-end Lider_Faccao;
-
-/*
-Considerando que:
-- a função/cargo de cada usuário será tratado em aplicação
-- haverá 4 telas, uma para cada usuário
-- cada tela só permitirá que as funções desse usuário sejam executadas
-Logo, não é necessário se precoupar, diretamente, com o cargo do usuário no banco de dados
-*/
-
---3)
-Create or replace package Comandante as
-    e_naoEncontrado Exception;
-    
-    Procedure Criar_nova_federacao(
-    p_nacao Nacao.Nome%type);
-end Lider_Faccao;
-
