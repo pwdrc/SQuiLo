@@ -89,33 +89,38 @@ Create or replace package Comandante as
     e_federacao_existe Exception;
     
     Procedure Criar_nova_federacao(
-    p_nacao Nacao.Nome%type);
-    
-    var_federacao Nacao.Federacao%type;
+        p_nacao Nacao.Nome%type
+     );
     
     procedure verificar_federacao_existe(
-    p_nacao Nacao.nome%type);
+        p_nacao Nacao.nome%type);
+    
     
 end Comandante;
 
 /
 
 Create or replace package body Comandante as 
-    Procedure Criar_nova_federacao(p_nacao Nacao.nome%type)
-    as
+    
+    Procedure Criar_nova_federacao(p_nacao in Nacao.nome%type)
+    as 
+     v_nome_federacao federacao.nome%TYPE;
     begin 
-        insert into federacao values ('teste', EXTRACT (YEAR FROM SYSDATE));
-        update Nacao set federacao = 'teste' where nome = p_nacao;
+        v_nome_federacao := 'TESTE2024';
+        insert into federacao values (v_nome_federacao, (SYSDATE));
+        update Nacao set federacao = v_nome_federacao where nome = p_nacao;
     end Criar_nova_federacao;
 
     Procedure verificar_federacao_existe(p_nacao Nacao.nome%type)
     as
+      var_federacao Nacao.Federacao%type;
     begin
-        select federacao into var_fedaracao from Nacao
+        select federacao into var_federacao from Nacao
             where nome = p_nacao;
-        if(var_federacao is null)
-            Criar_nova_federacao(p_nacao)
-        else raise e_federacao_existe;
+        if(var_federacao is null) then
+            Criar_nova_federacao(p_nacao);
+            else raise e_federacao_existe;
+        end if;
     end verificar_federacao_existe;   
     
 end Comandante;
