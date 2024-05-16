@@ -19,6 +19,10 @@ exception
     when others
         then  dbms_output.put_line('Erro nro: ' || SQLCODE || '. Mensagem: ' || SQLERRM );
 end federacao_nacao;
+/*SAIDA
+  Trigger FEDERACAO_NACAO compilado
+
+*/
 
 Create or replace trigger federacao_nacao_update
 after update on Nacao
@@ -35,6 +39,10 @@ exception
     when others
         then  dbms_output.put_line('Erro nro: ' || SQLCODE || '. Mensagem: ' || SQLERRM );
 end federacao_nacao_update;
+/*SAIDA
+   Trigger FEDERACAO_NACAO_UPDATE compilado
+
+*/
 
 --b)
 Create or replace trigger LiderFaccaoNacao
@@ -51,7 +59,33 @@ exception
     when others
         then  dbms_output.put_line('Erro nro: ' || SQLCODE || '. Mensagem: ' || SQLERRM );
 end LiderFaccaoNacao;
+/*SAIDA
+    Trigger LIDERFACCAONACAO compilado
+*/
 
+--c)
+Create or replace trigger  qttFaccao_Nacao_remove
+After delete on Nacao_Faccao for each row
+Begin
+    Update Faccao set qtd_nacoes = qtd_nacoes - 1
+        where nome = :old.faccao;
+exception
+    when others
+        then  dbms_output.put_line('Erro nro: ' || SQLCODE || '. Mensagem: ' || SQLERRM );
+end qttFaccao_Nacao;
+
+Create or replace trigger  qttFaccao_Nacao_soma
+After insert on Nacao_Faccao for each row
+Begin
+    Update Faccao set qtd_nacoes = qtd_nacoes + 1
+        where nome = :old.faccao;
+exception
+    when others
+        then  dbms_output.put_line('Erro nro: ' || SQLCODE || '. Mensagem: ' || SQLERRM );
+end qttFaccao_Nacao;
+/*SAIDA
+ Trigger QTTFACCAO_NACAO_REMOVE compilado
+*/
 
 --2)
 /*
