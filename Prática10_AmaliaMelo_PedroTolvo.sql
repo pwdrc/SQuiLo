@@ -87,6 +87,35 @@ end qttFaccao_Nacao;
  Trigger QTTFACCAO_NACAO_REMOVE compilado
 */
 
+--d
+Create or replace trigger qtd_planeta_nacao
+After insert or update on dominancia for each row
+Begin
+    if(:new.data_fim > SYSDATE) then
+     Update nacao  set qtd_planetas = qtd_planetas + 1
+        where nome = :new.nacao;
+    end if;
+exception
+    when others
+        then  dbms_output.put_line('Erro nro: ' || SQLCODE || '. Mensagem: ' || SQLERRM );
+end qtd_planeta_nacao;
+/*SAIDA
+    Trigger QTD_PLANETA_NACAO compilado
+*/
+
+Create or replace trigger qtd_planeta_nacao_remove
+After delete on dominancia for each row
+Begin
+     Update nacao  set qtd_planetas = qtd_planetas - 1
+        where nome = :old.nacao;
+exception
+    when others
+        then  dbms_output.put_line('Erro nro: ' || SQLCODE || '. Mensagem: ' || SQLERRM );
+end qtd_planeta_nacao_remove;
+/*SAIDA
+    Trigger QTD_PLANETA_NACAO_REMOVE compilado
+*
+
 --2)
 /*
 Usando view e trigger instead-of implemente a funcionalidade (de Gerenciamento) 
