@@ -37,6 +37,20 @@ exception
 end federacao_nacao_update;
 
 --b)
+Create or replace trigger LiderFaccaoNacao
+after insert or update on Nacao_Faccao
+for each row
+declare
+  e_nao_pode exception;
+  v_lider Faccao.lider%type;
+  v_nacao Nacao_Faccao.nacao%type;
+begin
+    Select lider into v_lider from Faccao where nome = :new.faccao;
+    Update lider set nacao = :new.nacao where cpi = v_lider;
+exception
+    when others
+        then  dbms_output.put_line('Erro nro: ' || SQLCODE || '. Mensagem: ' || SQLERRM );
+end LiderFaccaoNacao;
 
 
 --2)
