@@ -114,7 +114,7 @@ exception
 end qtd_planeta_nacao_remove;
 /*SAIDA
     Trigger QTD_PLANETA_NACAO_REMOVE compilado
-*
+*/
 
 --2)
 -- considerando que o privilégio de execução de cada operação
