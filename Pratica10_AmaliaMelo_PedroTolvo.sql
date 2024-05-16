@@ -119,6 +119,7 @@ select * from op_credenciar_comunidades;
 -- NacaoTeste	Planeta2		-               n
 
 -- trigger instead of para credenciar comunidades
+-- OBSERVAÇÃO: trocar 'FACCAO_A' para o valor da FACCAO do líder/usuário
 create or replace trigger credenciar_comunidades
 instead of insert on op_credenciar_comunidades
 for each row
@@ -130,3 +131,22 @@ begin
         delete from participa where faccao = 'FACCAO_A' and especie = (select especie from habitacao where planeta = :new.planeta and comunidade = :new.nome) and comunidade = :new.nome;
     end if;
 end;
+
+-- teste do gatilho com 'credenciada' = 'n'
+insert into op_credenciar_comunidades (nacao, planeta, nome, credenciada) values ('Nacao_A', 'Planeta_A1', 'Comunidade_A1', 'n');
+select * from participa;
+-- saída
+-- FACCAO1	ESPECIE1	COMUNIDADE1
+-- FACCAO2	ESPECIE2	COMUNIDADE2
+-- FACCAO_A	Especie_B	Comunidade_B1
+-- FACCAO_A	Especie_C	Comunidade_C1
+
+-- teste do gatilho com 'credenciada' = 's'
+insert into op_credenciar_comunidades (nacao, planeta, nome, credenciada) values ('Nacao_A', 'Planeta_A1', 'Comunidade_A1', 's');
+select * from participa;
+-- saída:
+-- FACCAO1	ESPECIE1	COMUNIDADE1
+-- FACCAO2	ESPECIE2	COMUNIDADE2
+-- FACCAO_A	Especie_A	Comunidade_A1
+-- FACCAO_A	Especie_B	Comunidade_B1
+-- FACCAO_A	Especie_C	Comunidade_C1
