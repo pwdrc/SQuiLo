@@ -82,6 +82,10 @@ Package LIDER_FACCAO compilado
 Package Body LIDER_FACCAO compilado
 */
 
+-- chamar o meu package com o nome da procedure em um bloco PL/SQL
+-- verificar se a nação não está sendo usada em outra ligação, com planeta, ou participa
+-- verificação semantica da restrição
+
 --3)
 Create or replace package Comandante as
 
@@ -125,6 +129,7 @@ Create or replace package body Comandante as
     
 end Comandante;
 
+-- chamar o package em um bloco PL/SQL separado
 
 -- 4)
 /*
