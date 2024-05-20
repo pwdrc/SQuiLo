@@ -136,53 +136,166 @@ Logo, não é necessário se precoupar, diretamente, com o cargo do usuário no 
 */
 
 create or replace package CIENTISTA as
-    -- CRUD de estrelas
-    procedure create_estrela(
-        id_estrela estrela.id_estrela%type,
-        nome_estrela estrela.nome%type,
-        classificacao_estrela estrela.classificacao%type,
-        massa_estrela estrela.massa%type,
-        x_estrela estrela.X%type,
-        y_estrela estrela.Y%type,
-        z_estrela estrela.Z%type
+    -- CRUD estrela
+    Procedure inserir_estrela(
+        p_id_estrela estrela.id_estrela%type,
+        p_nome estrela.nome%type,
+        p_classificacao estrela.classificacao%type,
+        p_massa estrela.massa%type,
+        p_x estrela.x%type,
+        p_y estrela.y%type,
+        p_z estrela.z%type
     );
 
-    procedure read_estrela(
-        id_estrela estrela.id_estrela%type
+    Procedure atualizar_estrela(
+        p_id_estrela estrela.id_estrela%type,
+        p_nome estrela.nome%type,
+        p_classificacao estrela.classificacao%type,
+        p_massa estrela.massa%type,
+        p_x estrela.x%type,
+        p_y estrela.y%type,
+        p_z estrela.z%type
     );
 
-    procedure update_estrela(
-        id_estrela estrela.id_estrela%type,
-        new_data_estrela estrela%rowtype
-    );
-
-    procedure delete_estrela(
-        nome_estrela estrela.nome%type
+    Procedure remover_estrela(
+        p_id_estrela estrela.id_estrela%type
     );
 
     -- Informações de Estrelas, Planetas e Sistemas
-    procedure relatorio_estrela(
-        nome_estrela estrela.nome%type
-    );
-
-    procedure relatorio_planeta(
-        nome_planeta planeta.nome%type
-    );
-
-    procedure relatorio_sistema(
-        nome_sistema sistema.nome%type
-    );
-
-    -- Bônus (1.5)
-    procedure relatorio_corpos_celestes(
-        nome_corpo_corpo_estrela estrela.nome%type,
-        distancia_min number,
-        distancia_max number
-    );
-
-    -- Bônus (1.0)
-    function distancia_otimizada(
-        estrela_a estrela.id_estrela%type,
-        estrela_b estrela.id_estrela%type
-    ) return number;
+    Function listar_estrelas return sys_refcursor;
+    Function listar_planetas return sys_refcursor;
+    Function listar_sistemas return sys_refcursor;
 end CIENTISTA;
+/
+-- body
+create or replace package body CIENTISTA as
+    Procedure inserir_estrela(
+        p_id_estrela estrela.id_estrela%type,
+        p_nome estrela.nome%type,
+        p_classificacao estrela.classificacao%type,
+        p_massa estrela.massa%type,
+        p_x estrela.x%type,
+        p_y estrela.y%type,
+        p_z estrela.z%type
+    ) as
+    begin
+        insert into estrela values (p_id_estrela, p_nome, p_classificacao, p_massa, p_x, p_y, p_z);
+        EXCEPTION
+            when DUP_VAL_ON_INDEX then
+                dbms_output.put_line('Estrela já existe');
+            when NO_DATA_FOUND then
+                dbms_output.put_line('Estrela não encontrada');
+            when OTHERS then
+                dbms_output.put_line('Erro ao inserir estrela');
+    end inserir_estrela;
+
+    Procedure atualizar_estrela(
+        p_id_estrela estrela.id_estrela%type,
+        p_nome estrela.nome%type,
+        p_classificacao estrela.classificacao%type,
+        p_massa estrela.massa%type,
+        p_x estrela.x%type,
+        p_y estrela.y%type,
+        p_z estrela.z%type
+    ) as
+    begin
+        update estrela set
+            nome = p_nome,
+            classificacao = p_classificacao,
+            massa = p_massa,
+            x = p_x,
+            y = p_y,
+            z = p_z
+        where id_estrela = p_id_estrela;
+        EXCEPTION
+            when NO_DATA_FOUND then
+                dbms_output.put_line('Estrela não encontrada');
+            when OTHERS then
+                dbms_output.put_line('Erro ao atualizar estrela');
+    end atualizar_estrela;
+
+    Procedure remover_estrela(
+        p_id_estrela estrela.id_estrela%type
+    ) as
+    begin
+        delete from estrela where id_estrela = p_id_estrela;
+        EXCEPTION
+            when NO_DATA_FOUND then
+                dbms_output.put_line('Estrela não encontrada');
+            when OTHERS then
+                dbms_output.put_line('Erro ao remover estrela');
+    end remover_estrela;
+
+    Function listar_estrelas return sys_refcursor as
+        v_cursor sys_refcursor;
+    begin
+        open v_cursor for
+            select * from estrela;
+        return v_cursor;
+    end listar_estrelas;
+
+    Function listar_planetas return sys_refcursor as
+        v_cursor sys_refcursor;
+    begin
+        open v_cursor for
+            select * from planeta;
+        return v_cursor;
+    end listar_planetas;
+
+    Function listar_sistemas return sys_refcursor as
+        v_cursor sys_refcursor;
+    begin
+        open v_cursor for
+            select * from sistema;
+        return v_cursor;
+    end listar_sistemas;
+end CIENTISTA;
+
+-- testes
+declare
+    v_cursor sys_refcursor;
+    v_id_estrela estrela.id_estrela%type;
+    v_nome estrela.nome%type;
+    v_classificacao estrela.classificacao%type;
+    v_massa estrela.massa%type;
+    v_x estrela.x%type;
+    v_y estrela.y%type;
+    v_z estrela.z%type;
+begin
+    CIENTISTA.inserir_estrela('Zet2Mus', 'Zeta 2 Muscae', 'G2V', 1.1, 1, 2, 3);
+    CIENTISTA.inserir_estrela('Citadelle', 'Citadelle', 'K0V', 0.8, 4, 5, 6);
+    CIENTISTA.inserir_estrela('Zet2Mus', 'Zeta 2 Muscae', 'G2V', 1.1, 1, 2, 3);
+    CIENTISTA.inserir_estrela('Citadelle', 'Citadelle', 'K0V', 0.8, 4, 5, 6);
+
+    v_cursor := CIENTISTA.listar_estrelas;
+    loop
+        fetch v_cursor into v_id_estrela, v_nome, v_classificacao, v_massa, v_x, v_y, v_z;
+        exit when v_cursor%notfound;
+        dbms_output.put_line(v_id_estrela || ' ' || v_nome || ' ' || v_classificacao || ' ' || v_massa || ' ' || v_x || ' ' || v_y || ' ' || v_z);
+    end loop;
+    close v_cursor;
+end;
+
+
+/* saída (parcial)
+strela já existe
+Estrela já existe
+Estrela já existe
+Estrela já existe
+Gl 539 Menkent K0IIIb 42.46195639463128 -12.358808 -7.624204 -10.694288
+Zet2Mus  Am 77.55324957585901 -38.477906 -3.725728 -93.430273
+21    Mon  F2V 44.136714346343965 -26.721561 82.987009 -.459427
+GJ 3579  m .0009120108393559 -12.511333 7.23996 15.612279
+Del Cae  B2IV-V 380.8903764981352 57.976821 141.4236 -152.599589
+Gl 84  M3 .0061094202490557 7.447634 4.522928 -2.766518
+Nu  Hor  A2V 17.603539536161644 17.06589 15.504933 -44.877574
+GJ 1079  K2/K3V .2288758657062362 2.19941 14.825278 -9.549867
+GJ 3200  G3V 1.3514500541175594 20.511102 21.863046 -7.342177
+23    Lyn  K5III 146.28506869998537 -49.557608 105.284831 179.755262
+Gl 654.1  F9V 1.4804713248976245 -4.886918 -20.077518 .253391
+GJ 3298  K4V .1706082389003123 7.325216 18.397104 -14.892531
+50    LMi  K0 15.332041990349136 -68.150834 19.357413 33.792481
+GJ 3724  m .0001336595516546 -23.394295 -2.564435 10.177992
+46    Cnc  G5III 101.85913880541167 -102.89117 116.956839 92.483481
+(...)
+*/
