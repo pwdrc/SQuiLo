@@ -23,6 +23,7 @@ end federacao_nacao;
   Trigger FEDERACAO_NACAO compilado
 
 */
+-- Fazer o delete e mostrar o antes e depois na tabela nação
 
 Create or replace trigger federacao_nacao_update
 after update on Nacao
