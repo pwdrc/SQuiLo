@@ -67,6 +67,30 @@ Create or replace package body Lider_Faccao as
     end remover_faccao_de_nacao;
 end Lider_Faccao;
 
+/
+
+Insert into nacao_faccao values ('Deserunt vero.', 'Comando red');
+Insert into nacao_faccao values ('Nam ut a.', 'Comando red');
+Insert into nacao_faccao values ('Fugit a omnis.', 'Carinhosa');
+
+select * from nacao_faccao;
+
+DECLARE
+    v_faccao Faccao.Nome%TYPE := 'Comando red';
+BEGIN
+    BEGIN
+        Lider_Faccao.remover_faccao_de_nacao(v_faccao);
+        DBMS_OUTPUT.PUT_LINE('Facção removida com sucesso.');
+    EXCEPTION
+        WHEN Lider_Faccao.e_naoEncontrado THEN
+            DBMS_OUTPUT.PUT_LINE('Erro: Facção não encontrada.');
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('Erro desconhecido: ' || SQLERRM);
+    END;
+END;
+/
+select * from nacao_faccao;
+
 /*
 Considerando que:
 - a função/cargo de cada usuário será tratado em aplicação
@@ -78,13 +102,17 @@ Logo, não é necessário se precoupar, diretamente, com o cargo do usuário no 
 /*
 Package LIDER_FACCAO compilado
 
-
 Package Body LIDER_FACCAO compilado
-*/
 
--- chamar o meu package com o nome da procedure em um bloco PL/SQL
--- verificar se a nação não está sendo usada em outra ligação, com planeta, ou participa
--- verificação semantica da restrição
+Resultado do select * from nacao_faccao; antes do procedure ser chamado:
+Deserunt vero.	Comando red
+Fugit a omnis.	Carinhosa
+Nam ut a.	Comando red
+
+Resultado do select * from nacao_faccao; após do procedure ser chamado:
+Fugit a omnis.	Carinhosa
+
+*/
 
 --3)
 Create or replace package Comandante as
