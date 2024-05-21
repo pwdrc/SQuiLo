@@ -104,12 +104,12 @@ Package LIDER_FACCAO compilado
 
 Package Body LIDER_FACCAO compilado
 
-Resultado do select * from nacao_faccao; antes do procedure ser chamado:
+Resultado do select * from nacao_faccao; antes do package ser chamado:
 Deserunt vero.	Comando red
 Fugit a omnis.	Carinhosa
 Nam ut a.	Comando red
 
-Resultado do select * from nacao_faccao; após do procedure ser chamado:
+Resultado do select * from nacao_faccao; após do package ser chamado:
 Fugit a omnis.	Carinhosa
 
 */
@@ -157,7 +157,48 @@ Create or replace package body Comandante as
     
 end Comandante;
 
--- chamar o package em um bloco PL/SQL separado
+/ 
+select * from federacao where nome = 'TESTE2024';
+
+DECLARE
+    v_nacao Nacao.Nome%TYPE := 'Carinhosa'; -- Substitua 'NomeDaNacao' pelo nome real da nação que você deseja usar
+BEGIN
+    BEGIN
+        -- Chama o procedimento verificar_federacao_existe
+        Comandante.verificar_federacao_existe(v_nacao);
+    EXCEPTION
+        WHEN Comandante.e_federacao_existe THEN
+            DBMS_OUTPUT.PUT_LINE('A federação já existe para a nação ' || v_nacao);
+        WHEN Comandante.e_naoEncontrado THEN
+            DBMS_OUTPUT.PUT_LINE('A nação ' || v_nacao || ' não foi encontrada.');
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('Erro: ' || SQLERRM);
+    END;
+
+    BEGIN
+        -- Chama o procedimento Criar_nova_federacao
+        Comandante.Criar_nova_federacao(v_nacao);
+    EXCEPTION
+        WHEN Comandante.e_naoEncontrado THEN
+            DBMS_OUTPUT.PUT_LINE('A nação ' || v_nacao || ' não foi encontrada.');
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('Erro: ' || SQLERRM);
+    END;
+END;
+/
+
+select * from federacao where nome = 'TESTE2024';
+/*SAÍDA:
+Package COMANDANTE compilado
+
+Package Body COMANDANTE compilado
+
+Resultado do select * from federacao where nome = 'TESTE2024'; antes do package ser chamado:
+
+
+Resultado do select * from federacao where nome = 'TESTE2024'; após do package ser chamado:
+TESTE2024	21/05/24
+*/
 
 -- 4)
 /*
