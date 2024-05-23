@@ -83,6 +83,9 @@ Carinhosa	TOTALITARIA	Mickey	Et sunt rerum	Fugit a omnis.
 
 -- EXECUTANDO COM SERIALIZABLE COMO NIVEL DE ISOLAMENTO--
 
+--1.3) Sessão 2
+set transaction isolation level serializable;
+
 --1.4) Sessão 2
 select f.nome, f.ideologia, l.nome, l.especie, l.nacao from a13692417.faccao  f join a13692417.lider  l on f.lider = l.CPI;
 /*
