@@ -121,12 +121,6 @@ insert into planeta values ('teste_trigger', 100, 50, 'maneiro')
 -- Saída
 -- A10492012 | insert | 22/05/24
 
--- b) Os triggers são executados dentro da mesma transação em que é executada a operação
--- instrução de disparo e, portanto, as operações dentro do trigger são efetivadas (commit) ou
--- desfeitas (rollback) junto com as operações da transação em que está a instrução.
--- Implemente e teste esse cenário (i.e. teste commit e rollback da transação em que está
--- a instrução que dispara o trigger e explique o que acontece no log).
-
 -- Transação comitada
 set transaction isolation level read committed
 name 'transacao_teste_1';
