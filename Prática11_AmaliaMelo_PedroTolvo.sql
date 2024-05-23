@@ -83,6 +83,64 @@ Carinhosa	TOTALITARIA	Mickey	Et sunt rerum	Fugit a omnis.
 
 -- EXECUTANDO COM SERIALIZABLE COMO NIVEL DE ISOLAMENTO--
 
+--1.4) Sessão 2
+select f.nome, f.ideologia, l.nome, l.especie, l.nacao from a13692417.faccao  f join a13692417.lider  l on f.lider = l.CPI;
+/*
+Comando red	TOTALITARIA	Denzel	Non eos qui	Nam ut a.
+Carinhosa	TOTALITARIA	Mickey	Et sunt rerum	Fugit a omnis.
+*/
+
+--1.5)  Sessão 1
+update faccao set ideologia = 'PROGRESSITA' where nome = 'Carinhosa';
+
+select f.nome, f.ideologia, l.nome, l.especie, l.nacao from a13692417.faccao  f join a13692417.lider  l on f.lider = l.CPI;
+
+/*
+Comando red	TOTALITARIA	Denzel	Non eos qui	Nam ut a.
+Carinhosa	PROGRESSITA	Mickey	Et sunt rerum	Fugit a omnis.
+*/
+
+ -- A tabela alterou o atributo que foi atualizado anteriormente
+
+--1.6) Sessão 2
+select f.nome, f.ideologia, l.nome, l.especie, l.nacao from a13692417.faccao  f join a13692417.lider  l on f.lider = l.CPI;
+
+/*
+Comando red	TOTALITARIA	Denzel	Non eos qui	Nam ut a.
+Carinhosa	TOTALITARIA	Mickey	Et sunt rerum	Fugit a omnis.
+*/
+
+-- Não aconteceu a alteração na coluna q foi modificada pelo outro usuário dono da base, logo os dados lidos estão desatualizados.
+
+--1.7) Sessão 1
+commit;
+
+--1.8) Sessão 2
+select f.nome, f.ideologia, l.nome, l.especie, l.nacao from a13692417.faccao  f join a13692417.lider  l on f.lider = l.CPI;
+
+/*
+Comando red	TOTALITARIA	Denzel	Non eos qui	Nam ut a.
+Carinhosa	TOTALITARIA	Mickey	Et sunt rerum	Fugit a omnis.
+*/
+
+-- Não aconteceu a alteração na coluna q foi modificada pelo outro usuário dono da base, logo os dados lidos estão desatualizados.
+
+
+--1.9) Sessão 2
+commit;
+
+
+--1.10) Sessão 2
+select f.nome, f.ideologia, l.nome, l.especie, l.nacao from a13692417.faccao  f join a13692417.lider  l on f.lider = l.CPI;
+
+/*
+Comando red	TOTALITARIA	Denzel	Non eos qui	Nam ut a.
+Carinhosa	PROGRESSITA	Mickey	Et sunt rerum	Fugit a omnis.
+*/
+
+-- Aconteceu a alteração na coluna que foi modificada pelo usuário dono da base, logo os dados lidos estão atualizados a partir de agora.
+
+
 
 -- 2
 -- a
