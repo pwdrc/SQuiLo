@@ -84,8 +84,6 @@ Carinhosa	TOTALITARIA	Mickey	Et sunt rerum	Fugit a omnis.
 -- EXECUTANDO COM SERIALIZABLE COMO NIVEL DE ISOLAMENTO--
 
 
-
-
 -- 2
 -- a
 -- Tabela para armazenar os logs
@@ -133,15 +131,68 @@ insert into planeta values ('teste_trigger', 100, 50, 'maneiro')
 set transaction isolation level read committed
 name 'transacao_teste_1';
 begin
-    insert into planeta values ('teste_trigger', 100, 50, 'maneiro');
+    insert into planeta values ('teste_trigger_3', 100, 50, 'maneiro');
     commit;
 end;
+
 -- Saída
 -- A10492012	insert	22/05/24
 -- Explicacao: A transação foi comitada, logo o log foi registrado
 
--- Saída
+-- Transcao com rollback
+set transaction isolation level read committed
+name 'transacao_teste_2';
+begin
+    insert into planeta values ('teste_trigger_4', 100, 50, 'maneiro');
+    rollback;
+end;
+-- O log não foi inserido, pois a transação foi desfeita
+
 -- c) Considere agora um cenário em que é interessante manter o log das informações de todas as
 -- tentativas de execução de operações DML, mesmo que a operação em si não tenha sido
 -- efetivada. Implemente e teste esse cenário (i.e. teste commit e rollback da transação
 -- em que está a instrução que dispara o trigger e explique o que acontece no log).
+-- Trigger autônomo, que registra inclusive ações com rollback
+-- Procedimento autônomo
+CREATE OR REPLACE PROCEDURE log_op_aut(p_operacao VARCHAR2) AS
+PRAGMA AUTONOMOUS_TRANSACTION;
+BEGIN
+  INSERT INTO log_op_planeta(usuario, operacao, data_hora)
+  VALUES(USER, p_operacao, SYSDATE);
+  COMMIT;
+END;
+/
+
+-- Triggers que chamam o procedimento autônomo
+CREATE OR REPLACE TRIGGER log_op_aut_insert
+BEFORE INSERT ON planeta
+FOR EACH ROW
+BEGIN
+  log_op_aut('INSERT');
+END;
+/
+
+CREATE OR REPLACE TRIGGER log_op_aut_update
+BEFORE UPDATE ON planeta
+FOR EACH ROW
+BEGIN
+  log_op_aut('UPDATE');
+END;
+/
+
+CREATE OR REPLACE TRIGGER log_op_aut_delete
+BEFORE DELETE ON planeta
+FOR EACH ROW
+BEGIN
+  log_op_aut('DELETE');
+END;
+/
+
+-- Teste rollback
+set transaction isolation level read committed
+name 'transacao_teste_rollback';
+begin
+    insert into planeta values ('tem_que_gravar', 100, 50, 'maneiro');
+    rollback;
+end;
+-- O log foi inserido, mesmo com o rollback, em função da adoção de um procedimento autônomo
