@@ -1,6 +1,60 @@
 --Amália Vitória de Melo NUSP:13692417
 --Pedro Guilherme Tolvo NUSP:10492012
 
+--1)
+--dando acesso de leitura ao usuário da sessão 2----------------------------------
+select 'grant select on a13692417.'|| table_name || ' to a10492012;' from user_tables;
+
+grant select on a13692417.FEDERACAO to a10492012;
+grant select on a13692417.ESTRELA to a10492012;
+grant select on a13692417.NACAO to a10492012;
+grant select on a13692417.ESPECIE to a10492012;
+grant select on a13692417.DOMINANCIA to a10492012;
+grant select on a13692417.PLANETA to a10492012;
+grant select on a13692417.NACAO_FACCAO to a10492012;
+grant select on a13692417.LIDER to a10492012;
+grant select on a13692417.FACCAO to a10492012;
+grant select on a13692417.ORBITA_PLANETA to a10492012;
+grant select on a13692417.COMUNIDADE to a10492012;
+grant select on a13692417.HABITACAO to a10492012;
+grant select on a13692417.PARTICIPA to a10492012;
+grant select on a13692417.SISTEMA to a10492012;
+grant select on a13692417.ORBITA_ESTRELA to a10492012;
+---------------------------------------------------------------------------------------
+
+-- EXECUTANDO COM READ COMMITED COMO NIVEL DE ISOLAMENTO--
+--1.3) 
+set transaction isolation level read committed;
+
+--1.4)
+select f.nome, f.ideologia, l.nome, l.especie, l.nacao from a13692417.faccao  f join a13692417.lider  l on f.lider = l.CPI;
+/*
+Comando red	TOTALITARIA	Denzel	Non eos qui	Nam ut a.
+Carinhosa	TRADICIONALISTA	Mickey	Et sunt rerum	Fugit a omnis.
+*/
+
+--1.5)
+--Na sessão 1
+update faccao set ideologia = 'TOTALITARIA' where nome = 'Carinhosa';
+
+select f.nome, f.ideologia, l.nome, l.especie, l.nacao from a13692417.faccao  f join a13692417.lider  l on f.lider = l.CPI;
+
+/*
+Comando red	TOTALITARIA	Denzel	Non eos qui	Nam ut a.
+Carinhosa	TOTALITARIA	Mickey	Et sunt rerum	Fugit a omnis.
+*/
+
+-- A tabela alterou o atributo que foi atualizado anteriormente;
+--1.6)
+--Sessão 2
+select f.nome, f.ideologia, l.nome, l.especie, l.nacao from a13692417.faccao  f join a13692417.lider  l on f.lider = l.CPI;
+
+/*
+Comando red	TOTALITARIA	Denzel	Non eos qui	Nam ut a.
+Carinhosa	TRADICIONALISTA	Mickey	Et sunt rerum	Fugit a omnis.
+*/
+
+-- Não aconteceu a alteração na coluna q foi modificada pelo outro usuário dono da base, logo os dados lidos estão desatualizados.
 
 -- 2
 -- a
