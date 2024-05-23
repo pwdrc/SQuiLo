@@ -148,10 +148,7 @@ begin
 end;
 -- O log não foi inserido, pois a transação foi desfeita
 
--- c) Considere agora um cenário em que é interessante manter o log das informações de todas as
--- tentativas de execução de operações DML, mesmo que a operação em si não tenha sido
--- efetivada. Implemente e teste esse cenário (i.e. teste commit e rollback da transação
--- em que está a instrução que dispara o trigger e explique o que acontece no log).
+-- c) 
 -- Trigger autônomo, que registra inclusive ações com rollback
 -- Procedimento autônomo
 CREATE OR REPLACE PROCEDURE log_op_aut(p_operacao VARCHAR2) AS
