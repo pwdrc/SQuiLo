@@ -1,4 +1,4 @@
---1)
+-1)
 
 --a)
 Create or replace trigger federacao_nacao
@@ -8,9 +8,9 @@ declare
     e_nao_pode exception;
     v_confere number;
 Begin
-    Select count(Federacao) into v_confere from Nacao;
+    Select count(Federacao) into v_confere from Nacao where federacao = :old.federacao;
     if(v_confere>2) then 
-        Delete from nacao where federacao = :old.federacao;
+        Delete from nacao where nome = :old.nome;
     else raise e_nao_pode;
     end if;
 exception
@@ -23,7 +23,31 @@ end federacao_nacao;
   Trigger FEDERACAO_NACAO compilado
 
 */
--- Fazer o delete e mostrar o antes e depois na tabela nação
+
+--TESTE
+
+insert into nacao values ('TESTE', 0, 'Molestias odio.'); 
+select count(federacao) from nacao where federacao = 'Molestias odio.';
+--havia 4 nacoes com essa federacao
+delete from nacao where nome = 'TESTE';
+--Teste foi deletado normalmente
+select count(federacao), nome from nacao where federacao = 'Molestias odio.' group by nome;
+-- descobri o nome das demais federacoes
+delete from nacao where nome = 'Nihil eos ab.';
+delete from nacao where nome = 'In iste in.';
+--deletei as demais federacoes
+select count(federacao) from nacao where federacao = 'Molestias odio.';
+--verificando se faltava apenas uma nacao com aquela federacao mesmo
+delete from nacao where nome = 'Deserunt vero.';
+/*Relatório de erros -
+Erro de SQL: ORA-04098: gatilho 'A13692417.FEDERACAO_NACAO' é inválido e a revalidação falhou
+04098. 00000 -  "trigger '%s.%s' is invalid and failed re-validation"
+*Cause:    A trigger was attempted to be retrieved for execution and was
+           found to be invalid.  This also means that compilation/authorization
+           failed for the trigger.
+*Action:   Options are to resolve the compilation/authorization errors,
+           disable the trigger, or drop the trigger.*/
+-- não foi possivel concluir a ação
 
 Create or replace trigger federacao_nacao_update
 after update on Nacao
@@ -42,8 +66,17 @@ exception
 end federacao_nacao_update;
 /*SAIDA
    Trigger FEDERACAO_NACAO_UPDATE compilado
-
 */
+
+select * from nacao where federacao ='Molestias odio.';
+--há 1 nacao
+
+update nacao set federacao = 'Deserunt vero.' where federacao = 'Molestias odio.';
+--nacao modificada
+
+select * from nacao where federacao ='Deserunt vero.';
+select * from federacao where nome ='Molestias odio.';
+
 
 --b)
 Create or replace trigger LiderFaccaoNacao
@@ -63,6 +96,7 @@ end LiderFaccaoNacao;
 /*SAIDA
     Trigger LIDERFACCAONACAO compilado
 */
+
 
 --c)
 Create or replace trigger  qttFaccao_Nacao_remove
