@@ -1,81 +1,74 @@
 --1)
 
 --a)
-Create or replace trigger federacao_nacao
-before delete on Nacao
-for each row
-declare
-    e_nao_pode exception;
-    v_confere number;
-Begin
-    Select count(Federacao) into v_confere from Nacao where federacao = :old.federacao;
-    if(v_confere>2) then 
-        Delete from nacao where nome = :old.nome;
-    else raise e_nao_pode;
+CREATE OR REPLACE TRIGGER federacao_nacao
+  FOR UPDATE OF federacao or DELETE ON Nacao
+COMPOUND TRIGGER
+   e_nao_pode exception;
+  
+  TYPE type_collection IS TABLE OF integer INDEX BY nacao.federacao%type;
+  Collection_Nacao_Federacao type_collection;
+  
+  BEFORE STATEMENT IS
+  BEGIN
+    
+    For contagem in 
+    (SELECT       federacao, count(nome) as nacoes
+      FROM               Nacao where federacao is not null
+      GROUP BY          federacao)
+    Loop  
+        Collection_Nacao_Federacao(contagem.federacao) := contagem.nacoes;
+    end loop;
+    --dbms_output.put_line('oii3'); 
+
+     
+  END BEFORE STATEMENT;
+
+  AFTER EACH ROW IS
+  BEGIN
+   
+    IF UPDATING then
+        if (:old.federacao != :new.federacao) and :old.federacao is not null then
+            Collection_Nacao_Federacao(:old.federacao) := Collection_Nacao_Federacao(:old.federacao) - 1;
+               dbms_output.put_line('velha:'|| :old.federacao || ' nova:' || :new.federacao);
+            If (:new.federacao is not null) then
+             Collection_Nacao_Federacao(:new.federacao) := Collection_Nacao_Federacao(:new.federacao) + 1;
+                dbms_output.put_line('velha:'|| :old.federacao || ' nova:' || :new.federacao);
+            end if;
+        end if;
+         if Collection_Nacao_Federacao(:old.federacao) < 1 then
+             raise e_nao_pode;
+        end if;
+    
     end if;
-exception
-    when e_nao_pode
-        then dbms_output.put_line('Não é possível executar a operacao');
-    when others
-        then  dbms_output.put_line('Erro nro: ' || SQLCODE || '. Mensagem: ' || SQLERRM );
-end federacao_nacao;
-/*SAIDA
-  Trigger FEDERACAO_NACAO compilado
 
-*/
+    IF DELETING and :old.federacao is not null  then
+        IF Collection_Nacao_Federacao(:old.federacao) <= 1   THEN
+           raise e_nao_pode;
+        end if;
+    END IF;   
+   
+END AFTER EACH ROW;
 
---TESTE
+END federacao_nacao;
 
-insert into nacao values ('TESTE', 0, 'Molestias odio.'); 
-select count(federacao) from nacao where federacao = 'Molestias odio.';
---havia 4 nacoes com essa federacao
-delete from nacao where nome = 'TESTE';
---Teste foi deletado normalmente
-select count(federacao), nome from nacao where federacao = 'Molestias odio.' group by nome;
--- descobri o nome das demais federacoes
-delete from nacao where nome = 'Nihil eos ab.';
-delete from nacao where nome = 'In iste in.';
---deletei as demais federacoes
-select count(federacao) from nacao where federacao = 'Molestias odio.';
---verificando se faltava apenas uma nacao com aquela federacao mesmo
-delete from nacao where nome = 'Deserunt vero.';
-/*Relatório de erros -
-Erro de SQL: ORA-04098: gatilho 'A13692417.FEDERACAO_NACAO' é inválido e a revalidação falhou
-04098. 00000 -  "trigger '%s.%s' is invalid and failed re-validation"
-*Cause:    A trigger was attempted to be retrieved for execution and was
-           found to be invalid.  This also means that compilation/authorization
-           failed for the trigger.
-*Action:   Options are to resolve the compilation/authorization errors,
-           disable the trigger, or drop the trigger.*/
--- não foi possivel concluir a ação
+select * from nacao where federacao ='Ea ex fuga.';
+/*Non soluta sit.	0	Ea ex fuga.
+Quam facere.	0	Ea ex fuga.
+Odio unde a.	0	Ea ex fuga.*/
 
-Create or replace trigger federacao_nacao_update
-after update on Nacao
-for each row
-declare
-    v_confere number;
-Begin
-    Select count(Federacao) into v_confere from Nacao
-        where federacao = :old.federacao;
-    if(v_confere<1) then 
-        Delete from Federacao where Nome = :old.federacao;
-    end if;
-exception
-    when others
-        then  dbms_output.put_line('Erro nro: ' || SQLCODE || '. Mensagem: ' || SQLERRM );
-end federacao_nacao_update;
-/*SAIDA
-   Trigger FEDERACAO_NACAO_UPDATE compilado
-*/
+update nacao set federacao = 'Deserunt vero.' where nome = 'Quam facere.';
+select * from nacao where federacao ='Ea ex fuga.';
 
-select * from nacao where federacao ='Molestias odio.';
---há 1 nacao
+update nacao set federacao = 'Deserunt vero.' where nome = 'Odio unde a.';
 
-update nacao set federacao = 'Deserunt vero.' where federacao = 'Molestias odio.';
---nacao modificada
+delete from nacao where nome ='Odio unde a.';
 
-select * from nacao where federacao ='Deserunt vero.';
-select * from federacao where nome ='Molestias odio.';
+--1 linha atualizado.
+
+rollback;
+
+commit;
 
 
 --b)
