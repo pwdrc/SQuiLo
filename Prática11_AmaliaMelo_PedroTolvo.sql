@@ -248,3 +248,29 @@ begin
     rollback;
 end;
 -- O log foi inserido, mesmo com o rollback, em função da adoção de um procedimento autônomo
+
+/*
+
+EXERCICIO 3
+
+GRUPO 4 -  Felipe Tanus Rodrigues 13692289
+            Augusto Lescura Pinto 10677290
+            Amália Vitória de Melo  13692417
+            Pedro Guilherme Tolvo 10492012
+
+
+
+A transação implementada irá girar em torno do item 3 - a.i. do projeto final (O comandante deverá incluir e excluir a sua nação de uma federação existente)
+
+
+a) As operações incluidas na transação serão: leitura(verificar se a federação já possui essa nação), inserção/exclusão(adicionar ou remover a nação), 
+e isso irá ativar o trigger de verificação da quantidade de nações vinculadas a uma federação, que garante que não exista uma federação sem nenhuma nação.
+
+b) O nível de isolamento da transação é Read Committed. Isso ocorre, pois existem poucas operações nas quais a federação de uma nação é relevante. Portanto,
+não existe a necessidade de gastar recursos adicionais para tornar essa operação serializable.
+
+c) Não existe a necessidade de utilizar save points, devido ao tamanho reduzido da transação. Contudo, visto que a operação irá ativar um trigger que acessa a 
+prórpia tabela que o chamou, torna-se necessária a utilização de uma transação autônoma para evitar o erro de tabela mutante.
+
+
+*/
